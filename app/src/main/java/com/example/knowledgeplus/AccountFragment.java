@@ -13,6 +13,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.google.firebase.auth.FirebaseAuth;
+
 public class AccountFragment extends Fragment  {
     public static final String ARG_USERNAME = "ARG_USERNAME";
     private String username;
