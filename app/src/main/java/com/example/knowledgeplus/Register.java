@@ -28,7 +28,7 @@ public class Register extends AppCompatActivity {
     TextView loginText;
 
     //TODO: Remove
-    Button testHomeActivity;
+    //Button testHomeActivity;
 
 
     @Override
@@ -89,6 +89,7 @@ public class Register extends AppCompatActivity {
 
 
         //TODO: Remove
+        /*
         testHomeActivity = (Button) findViewById(R.id.testHomeActivity);
         testHomeActivity.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -97,7 +98,7 @@ public class Register extends AppCompatActivity {
                 startActivity(toHomeIntent);
             }
         });
-
+        */
     }
 
     @Override
