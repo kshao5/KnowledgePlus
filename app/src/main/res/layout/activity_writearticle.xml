@@ -34,6 +34,7 @@
         android:layout_marginRight="10dp"
         android:hint="title"
         android:background="@color/white"
+        android:id = "@+id/title"
         ></EditText>
 
     <TextView
@@ -54,7 +55,8 @@
         android:layout_marginRight="10dp"
         android:hint="Body"
         android:inputType="textMultiLine"
-        android:background="@color/white">
+        android:background="@color/white"
+        android:id = "@+id/body">
     </EditText>
 
     <LinearLayout
@@ -100,5 +102,6 @@
         android:backgroundTint="#0abab5"
         android:elevation="10dp"
         android:layout_marginTop="15dp"
-        android:stateListAnimator="@anim/fragment_close_enter"></Button>
+        android:stateListAnimator="@anim/fragment_close_enter"
+        android:onClick="goToArticleDetail"></Button>
 </LinearLayout>

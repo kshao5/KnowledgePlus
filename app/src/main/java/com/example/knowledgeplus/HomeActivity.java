@@ -26,7 +26,7 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //TODO: Start publish activity
-                Intent intent = new Intent(HomeActivity.this, EmptyPublishActivity.class);
+                Intent intent = new Intent(HomeActivity.this, writeArticle.class);
                 startActivity(intent);
             }
         });

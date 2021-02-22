@@ -57,7 +57,7 @@ public class ArticleCardAdapter extends ArrayAdapter<ArticleCard> {
             public void onClick(View v) {
                 //TODO: Start an "ArticleDetails" activity
                 Log.i("ArticleCardAdapter", "START 'ArticleDetails' ACTIVITY");
-                Intent intent = new Intent(context, EmptyPublishActivity.class);
+                Intent intent = new Intent(context, articleDetail.class);
                 //intent.putExtra("ARTICLE_ID", articleCards.get(position).getId());
                 context.startActivity(intent);
             }

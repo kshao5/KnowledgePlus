@@ -189,6 +189,7 @@
         android:textColor="@color/black"
         android:textStyle="bold"
         android:fontFamily="sans-serif"
+        android:id = "@+id/logout"
         />
 
 

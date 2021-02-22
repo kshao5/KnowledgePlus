@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -56,7 +55,7 @@ public class CommentCardAdapter extends ArrayAdapter<CommentCard> {
             public void onClick(View v) {
                 //TODO: Start an "ArticleDetails" activity
                 Log.i(TAG,"TODO: Start 'ArticleDetails' Activity");
-                Intent intent = new Intent(context, EmptyPublishActivity.class);
+                Intent intent = new Intent(context, articleDetail.class);
                 //intent.putExtra("ARTICLE_ID", articleCards.get(position).getId());
                 context.startActivity(intent);
             }

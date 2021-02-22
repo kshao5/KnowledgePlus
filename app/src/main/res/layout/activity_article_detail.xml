@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".articleDetail"
+    android:orientation="vertical"
+    android:background="@color/background">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="How many vegetables are needed"
+        android:textSize="30dp"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+        android:layout_marginTop="10dp"
+        android:gravity="center"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginTop="10dp">
+        <ImageView
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:src="@drawable/accounticon">
+        </ImageView>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text = "Taipeng Liu"
+            android:textSize="20dp"
+            android:layout_marginLeft="5dp"
+            android:textColor="@color/black">
+        </TextView>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center">
+        <ImageView
+            android:layout_height="25dp"
+            android:layout_width="25dp"
+            android:src="@drawable/location">
+        </ImageView>
+        <TextView
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:text = "Santa Clara, CA"
+            android:textSize="20dp"
+            android:layout_marginLeft="5dp"
+            android:textColor="@color/black">
+        </TextView>
+
+        <ImageView
+            android:layout_height="25dp"
+            android:layout_width="25dp"
+            android:src="@drawable/clock"
+            android:layout_marginLeft="20dp">
+        </ImageView>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="02/14/2021"
+            android:textSize="20dp"
+            android:layout_marginLeft="5dp"
+            android:textColor="@color/black">
+        </TextView>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="5"
+            android:textSize="20dp"
+            android:textColor="@color/black">
+        </TextView>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=" views, "
+            android:textSize="20dp"
+            android:textColor="@color/black">
+        </TextView>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="2"
+            android:textSize="20dp"
+            android:textColor="@color/black">
+        </TextView>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text = " comments"
+            android:textSize="20dp"
+            android:textColor="@color/black">
+        </TextView>
+    </LinearLayout>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="146dp"
+        android:src="@drawable/vegetables"
+        android:layout_marginTop="10dp"></ImageView>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="vertical"
+        android:layout_marginTop="10dp"
+        android:textSize="17dp"
+        android:id = "@+id/articleContent"
+        android:textColor="@color/black"
+        android:text="The amount of vegetables you need to eat depends on your age, sex, and level of physical activity. The amount each person needs can vary between 1 and 3 cups each day. Those who are very physically active may need more. Recommended total daily amounts and recommended weekly amounts from each vegetable subgroup are shown in the two tables below.
+In general, 1 cup of raw or cooked vegetables or vegetable juice, or 2 cups of raw leafy greens can be considered as 1 cup from the Vegetable Group. The table below lists specific amounts that count as 1 cup of vegetables (in some cases equivalents for ½ cup are also shown) towards your recommended intake. For the new report, published in The Lancet, researchers analyzed health data and diet reports from more than 135,000 people across five continents who were followed for about seven years. When the researchers compared how much fruit, vegetables, and legumes people ate with mortality rates, they found that those who reported eating three to four combined servings a day were 22% less likely to die during the study compared to those who reported eating less than one serving a day.
+And the benefits stopped there: people eating more than four servings daily did not enjoy a bigger drop in mortality rates. The results remained strong even after the scientists adjusted for factors that could affect death rates such as age, gender, health status, physical activity, and meat and grain consumption.
+But the researchers’ definition of a serving size was slightly larger than in previous research—so the difference between three servings in this study (375 grams) and the commonly recommended five servings (400 grams) is actually very small. In reality, says lead author Victoria Miller, a doctoral student at McMaster University, “we’re fairly consistent with current dietary guidelines."></TextView>
+</LinearLayout>

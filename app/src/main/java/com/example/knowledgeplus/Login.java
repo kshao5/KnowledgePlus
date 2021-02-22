@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -33,6 +34,7 @@ public class Login extends AppCompatActivity {
 
         email = findViewById(R.id.email);
         password = findViewById(R.id.password);
+        password.setTransformationMethod(PasswordTransformationMethod.getInstance());
         fAuth = FirebaseAuth.getInstance();
         loginButton = findViewById(R.id.login);
 
@@ -55,7 +57,7 @@ public class Login extends AppCompatActivity {
                         if(task.isSuccessful()) {
                             Log.d("password", passwordString);
                             Toast.makeText(Login.this, "Logged in Successfully", Toast.LENGTH_SHORT).show();
-                            startActivity(new Intent(getApplicationContext(), MainArticle.class));
+                            startActivity(new Intent(getApplicationContext(), HomeActivity.class));
                         } else {
                             Log.d("password", passwordString);
                             Toast.makeText(Login.this, "Error !" + task.getException(), Toast.LENGTH_LONG).show();

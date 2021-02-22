@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -71,6 +72,16 @@ public class AccountFragment extends Fragment  {
             }
         });
 
+        Button logout = (Button) view.findViewById(R.id.logout);
+        logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), MainActivity.class);
+                Toast.makeText(getContext(), "You have successfully logged out", Toast.LENGTH_SHORT).show();
+                startActivity(intent);
+            }
+        });
         return view;
     }
+
 }

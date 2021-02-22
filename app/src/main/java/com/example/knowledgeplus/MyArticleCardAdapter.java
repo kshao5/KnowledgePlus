@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -59,7 +58,10 @@ public class MyArticleCardAdapter extends ArrayAdapter<ArticleCard> {
             @Override
             public void onClick(View v) {
                 //TODO: Start "edit" activity
-                Log.i(TAG,"TODO: Start '''edit''' activity");
+                Intent myIntent = new Intent(v.getContext(), writeArticle.class);
+                myIntent.putExtra("title", title.getText());
+                myIntent.putExtra("body", "This is dummy");
+                context.startActivity(myIntent);
             }
         });
 
@@ -77,7 +79,7 @@ public class MyArticleCardAdapter extends ArrayAdapter<ArticleCard> {
             public void onClick(View v) {
                 //TODO: Start an "ArticleDetails" activity
                 Log.i(TAG, "TODO: Start '''ArticleDetails''' activity");
-                Intent intent = new Intent(context, EmptyPublishActivity.class);
+                Intent intent = new Intent(context, articleDetail.class);
                 //intent.putExtra("ARTICLE_ID", articleCards.get(position).getId());
                 context.startActivity(intent);
             }
