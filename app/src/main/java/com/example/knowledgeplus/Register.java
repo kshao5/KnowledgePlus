@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -26,10 +27,16 @@ public class Register extends AppCompatActivity {
     FirebaseAuth fAuth;
     TextView loginText;
 
+    //TODO: Remove
+    Button testHomeActivity;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle("Sign Up");
 
         fullName = findViewById(R.id.fullName);
         email = findViewById(R.id.email);
@@ -78,6 +85,29 @@ public class Register extends AppCompatActivity {
                 startActivity(new Intent(getApplicationContext(), Login.class));
             }
         });
+
+
+
+        //TODO: Remove
+        testHomeActivity = (Button) findViewById(R.id.testHomeActivity);
+        testHomeActivity.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent toHomeIntent = new Intent(Register.this, HomeActivity.class);
+                startActivity(toHomeIntent);
+            }
+        });
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                this.finish();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
 

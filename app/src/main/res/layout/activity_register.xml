@@ -5,33 +5,49 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Register"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="#43c1ed">
     <TextView
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        android:text = "Register here"
+        android:text = "Sign Up"
         android:textSize="50dp"
+        android:layout_marginTop="130dp"
+        android:textStyle="bold"
+        android:textColor="@color/black"
         android:gravity="center">
     </TextView>
 
     <EditText
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:layout_width="match_parent"
         android:hint="Full Name"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="50dp"
+        android:background="@color/white"
         android:id="@+id/fullName">
     </EditText>
 
     <EditText
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:layout_width="match_parent"
         android:hint="Email"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:background="@color/white"
+        android:layout_marginTop="10dp"
         android:id="@+id/email">
     </EditText>
 
     <EditText
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:layout_width="match_parent"
         android:hint="Password"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:background="@color/white"
+        android:layout_marginTop="10dp"
         android:id="@+id/password">
     </EditText>
 
@@ -40,14 +56,26 @@
         android:layout_width="wrap_content"
         android:text="Register"
         android:layout_gravity="center_horizontal"
-        android:id ="@+id/registerButton"></Button>
+        android:id ="@+id/registerButton"
+        android:layout_marginTop="50dp"
+        android:backgroundTint="#0abab5"
+        android:elevation="10dp"
+        android:stateListAnimator="@anim/fragment_close_enter"></Button>
     <TextView
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        android:text = "Login here"
-        android:textSize="50dp"
+        android:text = "Have an account? Login here"
+        android:textSize="20dp"
+        android:layout_marginTop="50dp"
+        android:textColor="@color/black"
         android:gravity="center"
         android:id="@+id/loginText">
     </TextView>
+
+    <Button
+        android:id="@+id/testHomeActivity"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="GO TO HOME ACTIVITY" />
 
 </LinearLayout>
