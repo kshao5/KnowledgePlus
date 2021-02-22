@@ -26,6 +26,10 @@ public class Register extends AppCompatActivity {
     FirebaseAuth fAuth;
     TextView loginText;
 
+    //TODO: Remove
+    Button testHomeActivity;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,6 +82,19 @@ public class Register extends AppCompatActivity {
                 startActivity(new Intent(getApplicationContext(), Login.class));
             }
         });
+
+
+
+        //TODO: Remove
+        testHomeActivity = (Button) findViewById(R.id.testHomeActivity);
+        testHomeActivity.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent toHomeIntent = new Intent(Register.this, HomeActivity.class);
+                startActivity(toHomeIntent);
+            }
+        });
+
     }
 
 
