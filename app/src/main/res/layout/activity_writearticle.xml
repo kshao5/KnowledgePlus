@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#43c1ed">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height = "wrap_content"
+        android:text = "Share your knowledge today!"
+        android:textSize="25dp"
+        android:layout_marginTop="5dp"
+        android:textColor="@color/black"
+        android:gravity="center">
+    </TextView>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height = "wrap_content"
+        android:text = "Title*"
+        android:textSize = "20dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="20dp"
+        android:textColor="@color/black">
+    </TextView>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:hint="title"
+        android:background="@color/white"
+        ></EditText>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height = "wrap_content"
+        android:text = "Boby*"
+        android:textSize = "20dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="20dp"
+        android:textColor="@color/black">
+    </TextView>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:hint="Body"
+        android:inputType="textMultiLine"
+        android:background="@color/white">
+    </EditText>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="5dp">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:src="@drawable/addition"></ImageView>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text = "Add an image"
+            android:textSize="20dp"
+            android:textColor="@color/black"></TextView>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="5dp">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:src="@drawable/addition"></ImageView>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text = "Add my location"
+            android:textSize="20dp"
+            android:textColor="@color/black"></TextView>
+    </LinearLayout>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="PUBLISH"
+        android:layout_gravity="center"
+        android:backgroundTint="#0abab5"
+        android:elevation="10dp"
+        android:layout_marginTop="15dp"
+        android:stateListAnimator="@anim/fragment_close_enter"></Button>
+</LinearLayout>

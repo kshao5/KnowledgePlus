@@ -5,28 +5,43 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Register"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="#43c1ed">
+
     <TextView
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        android:text = "Login here"
+        android:text = "Log In"
         android:textSize="50dp"
+        android:layout_marginTop="130dp"
+        android:textStyle="bold"
+        android:textColor="@color/black"
         android:gravity="center">
     </TextView>
 
 
     <EditText
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:layout_width="match_parent"
         android:hint="Email"
-        android:id="@+id/email">
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:id="@+id/email"
+        android:textSize="20dp"
+        android:layout_marginTop="60dp"
+        android:background="@color/white">
     </EditText>
 
     <EditText
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:layout_width="match_parent"
         android:hint="Password"
-        android:id="@+id/password">
+        android:id="@+id/password"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:textSize="20dp"
+        android:background="@color/white">
     </EditText>
 
     <Button
@@ -34,11 +49,18 @@
         android:layout_width="wrap_content"
         android:text = "Login"
         android:layout_gravity="center_horizontal"
-        android:id="@+id/login"></Button>
+        android:id="@+id/login"
+        android:layout_marginTop="50dp"
+        android:backgroundTint="#0abab5"
+        android:elevation="10dp"
+        android:stateListAnimator="@anim/fragment_close_enter"></Button>
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="do not have account? Register here"
-        android:id="@+id/registerTextView"></TextView>
+        android:id="@+id/registerTextView"
+        android:gravity="center"
+        android:layout_marginTop="50dp"
+        android:textColor="@color/black"></TextView>
 </LinearLayout>

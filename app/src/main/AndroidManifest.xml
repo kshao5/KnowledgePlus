@@ -19,6 +19,8 @@
         <activity android:name=".HomeActivity" />
         <activity android:name=".Login" />
         <activity android:name=".Register">
+          <activity android:name=".MainArticle"></activity>
+        <activity android:name=".writeArticle"></activity>
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
