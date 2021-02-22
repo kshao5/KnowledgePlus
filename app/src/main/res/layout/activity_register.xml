@@ -4,9 +4,9 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Register"
+    tools:context=".SignUp"
     android:orientation="vertical"
-    android:background="#43c1ed">
+    android:background="@color/background">
     <TextView
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
@@ -72,10 +72,6 @@
         android:id="@+id/loginText">
     </TextView>
 
-    <Button
-        android:id="@+id/testHomeActivity"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="GO TO HOME ACTIVITY" />
+
 
 </LinearLayout>

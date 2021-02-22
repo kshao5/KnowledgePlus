@@ -19,21 +19,17 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
-import org.w3c.dom.Text;
-
-public class Register extends AppCompatActivity {
+public class SignUp extends AppCompatActivity {
     EditText fullName, email, password;
     Button registerButton;
     FirebaseAuth fAuth;
     TextView loginText;
 
-    //TODO: Remove
-    Button testHomeActivity;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_register);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Sign Up");
@@ -46,12 +42,13 @@ public class Register extends AppCompatActivity {
 
 
         fAuth = FirebaseAuth.getInstance();
-
-        // user has already loggedin
-        if(fAuth.getCurrentUser() != null) {
-            startActivity(new Intent(getApplicationContext(), MainActivity.class));
-            finish();
-        }
+//
+//        // user has already loggedin
+//        if(fAuth.getCurrentUser() != null) {
+//            fAuth.updateCurrentUser(null);
+//            startActivity(new Intent(getApplicationContext(), MainActivity.class));
+//            finish();
+//        }
 
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -68,10 +65,10 @@ public class Register extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(task.isSuccessful()) {
-                            Toast.makeText(Register.this, "User Created.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(SignUp.this, "User Created.", Toast.LENGTH_SHORT).show();
                             startActivity(new Intent(getApplicationContext(), MainActivity.class));
                         } else {
-                            Toast.makeText(Register.this, "Error !" + task.getException(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(SignUp.this, "Error !" + task.getException(), Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
@@ -83,18 +80,6 @@ public class Register extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(getApplicationContext(), Login.class));
-            }
-        });
-
-
-
-        //TODO: Remove
-        testHomeActivity = (Button) findViewById(R.id.testHomeActivity);
-        testHomeActivity.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent toHomeIntent = new Intent(Register.this, HomeActivity.class);
-                startActivity(toHomeIntent);
             }
         });
 
