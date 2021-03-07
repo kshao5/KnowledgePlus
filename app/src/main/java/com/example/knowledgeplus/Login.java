@@ -19,6 +19,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class Login extends AppCompatActivity {
     EditText email, password;
@@ -57,7 +59,11 @@ public class Login extends AppCompatActivity {
                         if(task.isSuccessful()) {
                             Log.d("password", passwordString);
                             Toast.makeText(Login.this, "Logged in Successfully", Toast.LENGTH_SHORT).show();
-                            startActivity(new Intent(getApplicationContext(), HomeActivity.class));
+                            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                            String name = user.getDisplayName();
+                            Intent loginIntent = new Intent(getApplicationContext(), HomeActivity.class);
+                            loginIntent.putExtra("username", name);
+                            startActivity(loginIntent);
                         } else {
                             Log.d("password", passwordString);
                             Toast.makeText(Login.this, "Error !" + task.getException(), Toast.LENGTH_LONG).show();

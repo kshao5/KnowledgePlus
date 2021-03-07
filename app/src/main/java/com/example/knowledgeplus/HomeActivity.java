@@ -14,12 +14,12 @@ import com.google.android.material.tabs.TabLayout;
 
 public class HomeActivity extends AppCompatActivity {
     ImageButton ib;
-
+    String userName;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-
+        userName = getIntent().getStringExtra("username");
         ib = (ImageButton) findViewById(R.id.publishButton);
         ib.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_IN);
         ib.setOnClickListener(new View.OnClickListener() {
@@ -27,6 +27,7 @@ public class HomeActivity extends AppCompatActivity {
             public void onClick(View v) {
                 //TODO: Start publish activity
                 Intent intent = new Intent(HomeActivity.this, writeArticle.class);
+                intent.putExtra("username", userName);
                 startActivity(intent);
             }
         });
