@@ -74,7 +74,8 @@
             android:layout_height="wrap_content"
             android:text = "Add an image"
             android:textSize="20dp"
-            android:textColor="@color/black"></TextView>
+            android:textColor="@color/black"
+            ></TextView>
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
@@ -91,7 +92,8 @@
             android:layout_height="wrap_content"
             android:text = "Add my location"
             android:textSize="20dp"
-            android:textColor="@color/black"></TextView>
+            android:textColor="@color/black"
+            android:id = "@+id/location"></TextView>
     </LinearLayout>
 
     <Button
@@ -103,5 +105,5 @@
         android:elevation="10dp"
         android:layout_marginTop="15dp"
         android:stateListAnimator="@anim/fragment_close_enter"
-        android:onClick="goToArticleDetail"></Button>
+        android:onClick="addArticle"></Button>
 </LinearLayout>
