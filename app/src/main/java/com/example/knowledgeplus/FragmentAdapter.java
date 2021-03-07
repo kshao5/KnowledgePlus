@@ -10,8 +10,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
 public class FragmentAdapter extends FragmentPagerAdapter {
-
-
+    
     final int PAGE_COUNT = 2;
     private String tabTitles[] = new String[] {"HOME",  "ACCOUNT"};
     private Context context;

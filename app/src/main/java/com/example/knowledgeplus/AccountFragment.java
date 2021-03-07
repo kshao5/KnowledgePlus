@@ -2,6 +2,7 @@ package com.example.knowledgeplus;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+
+import com.google.firebase.auth.FirebaseAuth;
 
 public class AccountFragment extends Fragment  {
     public static final String ARG_USERNAME = "ARG_USERNAME";
@@ -28,13 +31,15 @@ public class AccountFragment extends Fragment  {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        username = getArguments().getString(ARG_USERNAME);
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_account, container, false);
+        username = getActivity().getIntent().getStringExtra("username");
+        TextView userNameTV = view.findViewById(R.id.username);
+        userNameTV.setText(username);
 
         Button profile = (Button) view.findViewById(R.id.profileButton);
         profile.setOnClickListener(new View.OnClickListener() {

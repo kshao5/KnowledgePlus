@@ -3,10 +3,6 @@ package com.example.knowledgeplus;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
-import com.google.firebase.auth.FirebaseAuth;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
@@ -15,10 +11,9 @@ import android.view.View;
 
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Button;
 
 public class MainActivity extends AppCompatActivity {
-
+    Intent newIntent;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,12 +45,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void goToSignUp(View view) {
-        Intent newIntent = new Intent(this, Register.class);
+        newIntent = new Intent(this, SignUp.class);
+        Log.d("MainActivity", "54");
         startActivity(newIntent);
     }
 
     public void goToLogIn(View view) {
-        Intent newIntent = new Intent(this, Login.class);
+        newIntent = new Intent(this, Login.class);
         startActivity(newIntent);
     }
 

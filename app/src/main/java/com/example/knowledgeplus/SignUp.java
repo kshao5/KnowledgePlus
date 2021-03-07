@@ -18,22 +18,19 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 
-import org.w3c.dom.Text;
-
-public class Register extends AppCompatActivity {
+public class SignUp extends AppCompatActivity {
     EditText fullName, email, password;
     Button registerButton;
     FirebaseAuth fAuth;
     TextView loginText;
 
-    //TODO: Remove
-    //Button testHomeActivity;
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_register);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Sign Up");
@@ -46,20 +43,30 @@ public class Register extends AppCompatActivity {
 
 
         fAuth = FirebaseAuth.getInstance();
-
-        // user has already loggedin
-        if(fAuth.getCurrentUser() != null) {
-            startActivity(new Intent(getApplicationContext(), MainActivity.class));
-            finish();
-        }
+//
+//        // user has already loggedin
+//        if(fAuth.getCurrentUser() != null) {
+//            fAuth.updateCurrentUser(null);
+//            startActivity(new Intent(getApplicationContext(), MainActivity.class));
+//            finish();
+//        }
 
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String passwordString = password.getText().toString().trim();
                 String emailString = email.getText().toString().trim();
+                String fullNameString = fullName.getText().toString();
                 if (TextUtils.isEmpty(passwordString)) {
-                    password.setError("Password is Required");
+                    password.setError("Password is required");
+                    return;
+                }
+                if(TextUtils.isEmpty(fullNameString)) {
+                    fullName.setError("Full name is required");
+                    return;
+                }
+                if (TextUtils.isEmpty(emailString)) {
+                    email.setError("Email address is required");
                     return;
                 }
 
@@ -68,37 +75,25 @@ public class Register extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(task.isSuccessful()) {
-                            Toast.makeText(Register.this, "User Created.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(SignUp.this, "User Created.", Toast.LENGTH_SHORT).show();
+                            FirebaseUser newUser = FirebaseAuth.getInstance().getCurrentUser();
+                            UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder().setDisplayName(fullNameString).build();
+                            newUser.updateProfile(profileUpdates);
                             startActivity(new Intent(getApplicationContext(), MainActivity.class));
                         } else {
-                            Toast.makeText(Register.this, "Error !" + task.getException(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(SignUp.this, "Error !" + task.getException(), Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
             }
         });
 
-        loginText.setOnClickListener(new View.OnClickListener(){
-
+        loginText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(getApplicationContext(), Login.class));
             }
         });
-
-
-
-        //TODO: Remove
-        /*
-        testHomeActivity = (Button) findViewById(R.id.testHomeActivity);
-        testHomeActivity.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent toHomeIntent = new Intent(Register.this, HomeActivity.class);
-                startActivity(toHomeIntent);
-            }
-        });
-        */
     }
 
     @Override
