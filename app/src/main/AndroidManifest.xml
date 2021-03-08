@@ -32,7 +32,8 @@
         <activity android:name=".HomeActivity" />
         <activity android:name=".Login" />
         <activity android:name=".SignUp" />
-        <activity android:name=".writeArticle" />
+        <activity android:name=".writeArticle"
+            android:parentActivityName=".HomeActivity"/>
 
 
     </application>

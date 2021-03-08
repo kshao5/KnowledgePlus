@@ -33,10 +33,10 @@ public class FragmentAdapter extends FragmentPagerAdapter {
         switch (position) {
             case 0:
                 // Home Tab
-                return HomeFragment.newInstance(false);
+                return HomeFragment.newInstance();
             case 1:
                 // Account Tab
-                return AccountFragment.newInstance("Taipeng");
+                return AccountFragment.newInstance();
         }
 
         return null;

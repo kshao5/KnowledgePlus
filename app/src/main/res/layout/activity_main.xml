@@ -48,7 +48,7 @@
             android:layout_gravity="center"
             android:text="Log In"
             android:layout_marginTop="50dp"
-            android:backgroundTint="#0abab5"
+            android:backgroundTint="@color/button"
             android:elevation="10dp"
             android:stateListAnimator="@anim/fragment_close_enter"
             android:onClick = "goToLogIn"
@@ -60,7 +60,7 @@
         android:layout_gravity="center"
         android:text="Sign up"
         android:layout_marginTop="30dp"
-        android:backgroundTint="#0abab5"
+        android:backgroundTint="@color/button"
         android:elevation="10dp"
         android:stateListAnimator="@anim/fragment_close_enter"
         android:onClick = "goToSignUp">
