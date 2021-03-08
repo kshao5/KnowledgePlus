@@ -1,21 +1,27 @@
 package com.example.knowledgeplus;
 
 import android.Manifest;
+import android.app.ActionBar;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Looper;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
@@ -27,12 +33,20 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Calendar;
@@ -44,19 +58,35 @@ public class writeArticle extends AppCompatActivity {
     String uid;
     FusedLocationProviderClient fusedLocationProviderClient;
     TextView locationTV;
+    LocationCallback locationCallback;
+    Task<Location> location;
+    public List<Uri> imageUri;
+    private FirebaseStorage storage;
+    private StorageReference storageReference;
+    String id;
+    TextView imageIndicatorTV;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d(String.valueOf(getApplicationContext()), "onCreate");
         setContentView(R.layout.activity_writearticle);
         uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
         databaseReference = FirebaseDatabase.getInstance().getReference("article");
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+        storage = FirebaseStorage.getInstance();
+        storageReference = storage.getReference();
+        imageIndicatorTV = findViewById(R.id.imageIndicatorTV);
+
+        imageUri = new ArrayList<>();
+
+        imageIndicatorTV.setVisibility(View.INVISIBLE);
+
 
         LocationRequest locationRequest = LocationRequest.create();
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         locationRequest.setInterval(20 * 1000);
-        LocationCallback locationCallback = new LocationCallback() {
+        locationCallback = new LocationCallback() {
             @Override
             public void onLocationResult(LocationResult locationResult) {
                 if (locationResult == null) {
@@ -64,10 +94,7 @@ public class writeArticle extends AppCompatActivity {
                 }
                 for (Location location : locationResult.getLocations()) {
                     if (location != null) {
-                        double wayLatitude = location.getLatitude();
-                        double wayLongitude = location.getLongitude();
-                        Log.d("72", String.valueOf(wayLatitude));
-                        Log.d("73", String.valueOf(wayLongitude));
+                        return;
                     }
 
                 }
@@ -84,6 +111,7 @@ public class writeArticle extends AppCompatActivity {
             return;
         }
         fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper());
+        location = fusedLocationProviderClient.getLastLocation();
 
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -140,6 +168,15 @@ public class writeArticle extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (imageUri.size() > 0) {
+            imageIndicatorTV.setVisibility(View.VISIBLE);
+            imageIndicatorTV.setText("added " + imageUri.size() + " images");
+        }
+    }
+
     public void addArticle(View view) {
         String titleString = titleET.getText().toString();
         String bodyString = bodyET.getText().toString();
@@ -149,7 +186,7 @@ public class writeArticle extends AppCompatActivity {
         }
         if (!titleString.isEmpty() && !bodyString.isEmpty()) {
             // creating unique id for article
-            String id = databaseReference.push().getKey();
+            id = databaseReference.push().getKey();
             String username = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
             String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
@@ -157,6 +194,8 @@ public class writeArticle extends AppCompatActivity {
             // inside the id node, the new article will be stored
             databaseReference.child(id).setValue(articleCard);
             Toast.makeText(this, "Article added", Toast.LENGTH_SHORT).show();
+            fusedLocationProviderClient.removeLocationUpdates(locationCallback);
+            uploadImage();
             startActivity(new Intent(writeArticle.this, HomeActivity.class));
         }
         else {
@@ -168,4 +207,59 @@ public class writeArticle extends AppCompatActivity {
             }
         }
     }
+
+    public void addImage(View view) {
+        // choose image from gallery from phone
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+        startActivityForResult(intent, 1);
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Log.d("205", String.valueOf(resultCode));
+        if (requestCode == 1 && resultCode == RESULT_OK && data != null && data.getData() != null) {
+            Log.d("205", String.valueOf(imageUri.size()));
+            imageUri.add(data.getData());
+        }
+    }
+
+    private void uploadImage() {
+        final ProgressDialog pd = new ProgressDialog(this);
+        pd.setTitle("Uploading Image...");
+        pd.show();
+
+        for (int i = 0; i < imageUri.size(); i++) {
+            StorageReference imageRef = storageReference.child("images/" + id + "/" + i);
+            imageRef.putFile(imageUri.get(i))
+                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            pd.dismiss();
+                            Snackbar.make(findViewById(android.R.id.content), "Image Uploaded", Snackbar.LENGTH_LONG).show();
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            pd.dismiss();
+                            Toast.makeText(getApplicationContext(), "Failed To Upload", Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onProgress(@NonNull UploadTask.TaskSnapshot snapshot) {
+                            double progressPercent = (100.00 * snapshot.getBytesTransferred() / snapshot.getTotalByteCount());
+                            pd.setMessage("Percentage: " + (int) progressPercent + "%");
+                        }
+                    });
+        }
+
+
+    }
+
 }
