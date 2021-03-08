@@ -1,6 +1,8 @@
 package com.example.knowledgeplus;
 
-public class ArticleCard {
+import java.io.Serializable;
+
+public class ArticleCard implements Serializable {
     String id;
     String title;
     int nViews;
@@ -96,7 +98,7 @@ public class ArticleCard {
         this.imageURL = imageURL;
     }
 
-    public ArticleCard newInstance(String id, String title, int nViews, int nComments, String author, String uid, String location, String publishDate, String body, String imageURL) {
+    public static ArticleCard newInstance(String id, String title, int nViews, int nComments, String author, String uid, String location, String publishDate, String body, String imageURL) {
         return new ArticleCard(id, title, nViews, nComments, author, uid, location, publishDate, body, imageURL);
     }
 }

@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/background">
 
     <ScrollView
         android:id="@+id/scrollView"
@@ -41,7 +42,7 @@
                 <ImageView
                     android:layout_width="25dp"
                     android:layout_height="25dp"
-                    android:src="@drawable/accounticon"/>
+                    android:src="@drawable/accounticon" />
 
                 <TextView
                     android:id="@+id/textViewAuthor"
@@ -50,7 +51,7 @@
                     android:layout_marginLeft="5dp"
                     android:text="Taipeng Liu"
                     android:textColor="@color/black"
-                    android:textSize="20dp"/>
+                    android:textSize="20dp" />
             </LinearLayout>
 
             <LinearLayout
@@ -62,7 +63,7 @@
                 <ImageView
                     android:layout_width="25dp"
                     android:layout_height="25dp"
-                    android:src="@drawable/location"/>
+                    android:src="@drawable/location" />
 
                 <TextView
                     android:id="@+id/textViewLocation"
@@ -71,13 +72,20 @@
                     android:layout_marginLeft="5dp"
                     android:text="Santa Clara, CA"
                     android:textColor="@color/black"
-                    android:textSize="20dp"/>
+                    android:textSize="20dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal">
 
                 <ImageView
                     android:layout_width="25dp"
                     android:layout_height="25dp"
                     android:layout_marginLeft="20dp"
-                    android:src="@drawable/clock"/>
+                    android:src="@drawable/clock" />
 
                 <TextView
                     android:id="@+id/textViewPublishdate"
@@ -86,7 +94,7 @@
                     android:layout_marginLeft="5dp"
                     android:text="02/14/2021"
                     android:textColor="@color/black"
-                    android:textSize="20dp"/>
+                    android:textSize="20dp" />
             </LinearLayout>
 
             <LinearLayout
@@ -101,14 +109,14 @@
                     android:layout_height="wrap_content"
                     android:text="5"
                     android:textColor="@color/black"
-                    android:textSize="20dp"/>
+                    android:textSize="20dp" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text=" views, "
                     android:textColor="@color/black"
-                    android:textSize="20dp"/>
+                    android:textSize="20dp" />
 
                 <TextView
                     android:id="@+id/textViewNComments"
@@ -123,7 +131,7 @@
                     android:layout_height="wrap_content"
                     android:text=" comments"
                     android:textColor="@color/black"
-                    android:textSize="20dp"/>
+                    android:textSize="20dp" />
             </LinearLayout>
 
             <ImageView
@@ -151,9 +159,9 @@ But the researchers’ definition of a serving size was slightly larger than in 
                 android:paddingLeft="20dp"
                 android:paddingRight="20dp"
                 android:text="COMMENTS"
-                android:textStyle="italic"
                 android:textColor="@color/black"
-                android:textSize="17dp"/>
+                android:textSize="17dp"
+                android:textStyle="italic" />
 
             <TextView
                 android:id="@+id/textViewComment"
@@ -164,7 +172,7 @@ But the researchers’ definition of a serving size was slightly larger than in 
                 android:paddingBottom="20dp"
                 android:text="User A: \nVery useful article!"
                 android:textColor="@color/black"
-                android:textSize="17dp"/>
+                android:textSize="17dp" />
         </LinearLayout>
     </ScrollView>
 
@@ -196,7 +204,7 @@ But the researchers’ definition of a serving size was slightly larger than in 
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
             android:background="@color/button"
-            android:text="SEND"/>
+            android:text="SEND" />
     </RelativeLayout>
 
 </RelativeLayout>

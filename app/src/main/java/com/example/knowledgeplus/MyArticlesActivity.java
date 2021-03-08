@@ -21,9 +21,6 @@ public class MyArticlesActivity extends AppCompatActivity {
 
         ArrayList<ArticleCard> myArticleCards = new ArrayList<ArticleCard>();
 
-        for (int i = 0; i < 8; i++) {
-            myArticleCards.add(ArticleCard.newExample(0));
-        }
 
         MyArticleCardAdapter myArticleCardAdapter = new MyArticleCardAdapter(this, myArticleCards);
 

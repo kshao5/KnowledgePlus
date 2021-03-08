@@ -151,10 +151,11 @@ public class writeArticle extends AppCompatActivity {
             // creating unique id for article
             String id = databaseReference.push().getKey();
             String username = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
+            String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-            Article article = new Article(titleString, bodyString, location, username, id, Calendar.getInstance().getTime().toString());
+            ArticleCard articleCard = new ArticleCard(id, titleString, 0, 0, username, uid, location, Calendar.getInstance().getTime().toString(), bodyString, null);
             // inside the id node, the new article will be stored
-            databaseReference.child(id).setValue(article);
+            databaseReference.child(id).setValue(articleCard);
             Toast.makeText(this, "Article added", Toast.LENGTH_SHORT).show();
             startActivity(new Intent(writeArticle.this, HomeActivity.class));
         }

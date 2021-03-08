@@ -57,16 +57,19 @@ public class HomeFragment extends Fragment {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 articleCards.clear();
                 for (DataSnapshot articleSnapshot : snapshot.getChildren()) {
-                    Article article = articleSnapshot.getValue(Article.class);
+                    ArticleCard articleCard = articleSnapshot.getValue(ArticleCard.class);
 
                     // TODO: set Image ?
-                    articleCards.add(ArticleCard.newInstance(articleSnapshot.getKey(),
-                                                             article.getTitle(),
-                                                             article.getnViews(),
-                                                             article.getnComments(),
-                                                             article.getUsername(),
-                                                             article.getLocation(),
-                                                             article.getDate()));
+                    articleCards.add(ArticleCard.newInstance(articleCard.getId(),
+                                                             articleCard.getTitle(),
+                                                             articleCard.getnViews(),
+                                                             articleCard.getnComments(),
+                                                             articleCard.getAuthor(),
+                                                             articleCard.getUid(),
+                                                             articleCard.getLocation(),
+                                                             articleCard.getPublishDate(),
+                                                             articleCard.getBody(),
+                                                             null));
 
                     ArticleCardAdapter articleCardAdapter = new ArticleCardAdapter(getContext(), articleCards);
                     listView.setAdapter(articleCardAdapter);
