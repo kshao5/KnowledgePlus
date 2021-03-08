@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+//TODO
 // for displaying detail of article
 public class articleDetail extends AppCompatActivity {
 

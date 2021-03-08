@@ -1,13 +1,13 @@
 package com.example.knowledgeplus;
 
 public class ArticleCard {
-    public String id;
-    public String title;
-    public int nViews;
-    public int nComments;
-    public String author;
-    public String location;
-    public String publishDate;
+    String id;
+    String title;
+    int nViews;
+    int nComments;
+    String author;
+    String location;
+    String publishDate;
 
     public ArticleCard() {
         this.id = "EMPTY";
@@ -34,6 +34,30 @@ public class ArticleCard {
         return this.id;
     }
 
+    public String getTitle() {
+        return title;
+    }
+
+    public int getnViews() {
+        return nViews;
+    }
+
+    public int getnComments() {
+        return nComments;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public String getPublishDate() {
+        return publishDate;
+    }
+
     public static ArticleCard newExample(int exampleNo) {
         switch (exampleNo) {
             case 0:
@@ -54,5 +78,8 @@ public class ArticleCard {
         return new ArticleCard();
     }
 
-
+    public static ArticleCard newInstance(String id, String title, int nViews, int nComments,
+                                          String author, String location, String publishDate) {
+        return new ArticleCard(id, title, nViews, nComments, author, location, publishDate);
+    }
 }

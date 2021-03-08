@@ -13,19 +13,24 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import java.util.ArrayList;
 
 public class HomeFragment extends Fragment {
     final String TAG = "HomeFragment";
-    public static final String ARG_MODE = "ARG_MODE";
     ListView listView;
     ArrayList<ArticleCard> articleCards;
+    FirebaseDatabase db;
+    DatabaseReference comment_table;
+    DatabaseReference article_table;
 
-    private boolean myArticleOnly;
-
-    public static HomeFragment newInstance(boolean myArticleOnly) {
+    public static HomeFragment newInstance() {
         Bundle args = new Bundle();
-        args.putBoolean(ARG_MODE, myArticleOnly);
         HomeFragment fragment = new HomeFragment();
         fragment.setArguments(args);
         return fragment;
@@ -34,8 +39,10 @@ public class HomeFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        myArticleOnly = getArguments().getBoolean(ARG_MODE);
         articleCards = new ArrayList<ArticleCard>();
+        db = FirebaseDatabase.getInstance();
+        //comment_table = db.getReference("comment");
+        article_table = db.getReference("article");
     }
 
     @Nullable
@@ -45,18 +52,33 @@ public class HomeFragment extends Fragment {
 
         listView = (ListView) view.findViewById(R.id.listView);
 
-        //TODO: Replace examples with real articles
-        articleCards.add(ArticleCard.newExample(0));
-        articleCards.add(ArticleCard.newExample(1));
-        articleCards.add(ArticleCard.newExample(0));
-        articleCards.add(ArticleCard.newExample(1));
-        articleCards.add(ArticleCard.newExample(0));
-        articleCards.add(ArticleCard.newExample(1));
-        articleCards.add(ArticleCard.newExample(0));
-        articleCards.add(ArticleCard.newExample(1));
+        article_table.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                articleCards.clear();
+                for (DataSnapshot articleSnapshot : snapshot.getChildren()) {
+                    Article article = articleSnapshot.getValue(Article.class);
 
-        ArticleCardAdapter articleCardAdapter = new ArticleCardAdapter(getContext(), articleCards);
-        listView.setAdapter(articleCardAdapter);
+                    // TODO: set Image ?
+                    articleCards.add(ArticleCard.newInstance(articleSnapshot.getKey(),
+                                                             article.getTitle(),
+                                                             article.getnViews(),
+                                                             article.getnComments(),
+                                                             article.getUsername(),
+                                                             article.getLocation(),
+                                                             article.getDate()));
+
+                    ArticleCardAdapter articleCardAdapter = new ArticleCardAdapter(getContext(), articleCards);
+                    listView.setAdapter(articleCardAdapter);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                // Nothing
+            }
+        });
+
 
         return view;
     }
