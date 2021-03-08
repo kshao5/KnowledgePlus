@@ -26,7 +26,6 @@ public class HomeFragment extends Fragment {
     ListView listView;
     ArrayList<ArticleCard> articleCards;
     FirebaseDatabase db;
-    DatabaseReference comment_table;
     DatabaseReference article_table;
 
     public static HomeFragment newInstance() {
@@ -41,7 +40,6 @@ public class HomeFragment extends Fragment {
         super.onCreate(savedInstanceState);
         articleCards = new ArrayList<ArticleCard>();
         db = FirebaseDatabase.getInstance();
-        //comment_table = db.getReference("comment");
         article_table = db.getReference("article");
     }
 
