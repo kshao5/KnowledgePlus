@@ -1,12 +1,10 @@
 package com.example.knowledgeplus;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.NavUtils;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
-import android.util.Log;
 import android.view.MenuItem;
 import android.widget.TextView;
 
@@ -18,7 +16,7 @@ public class articleDetail extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_article_detail);
-        TextView articleContent = (TextView)findViewById(R.id.articleContent);
+        TextView articleContent = (TextView)findViewById(R.id.articleBody);
         articleContent.setMovementMethod(new ScrollingMovementMethod());
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }

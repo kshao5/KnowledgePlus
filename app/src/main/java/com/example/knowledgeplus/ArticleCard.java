@@ -6,32 +6,30 @@ public class ArticleCard {
     int nViews;
     int nComments;
     String author;
+    String uid;
     String location;
     String publishDate;
+    String body;
+    String imageURL;
 
     public ArticleCard() {
-        this.id = "EMPTY";
-        this.title = "";
-        this.nViews = 0;
-        this.nComments = 0;
-        this.author = "";
-        this.location = "";
-        this.publishDate = "";
     }
 
-    public ArticleCard(String id, String title, int nViews, int nComments,
-                       String author, String location, String publishDate) {
+    public ArticleCard(String id, String title, int nViews, int nComments, String author, String uid, String location, String publishDate, String body, String imageURL) {
         this.id = id;
         this.title = title;
         this.nViews = nViews;
         this.nComments = nComments;
         this.author = author;
+        this.uid = uid;
         this.location = location;
         this.publishDate = publishDate;
+        this.body = body;
+        this.imageURL = imageURL;
     }
 
     public String getId() {
-        return this.id;
+        return id;
     }
 
     public String getTitle() {
@@ -50,6 +48,10 @@ public class ArticleCard {
         return author;
     }
 
+    public String getUid() {
+        return uid;
+    }
+
     public String getLocation() {
         return location;
     }
@@ -58,28 +60,43 @@ public class ArticleCard {
         return publishDate;
     }
 
-    public static ArticleCard newExample(int exampleNo) {
-        switch (exampleNo) {
-            case 0:
-                return new ArticleCard("EXAMPLE#00",
-                        "How many vegetables are needed?",
-                        10, 2,
-                        "Taipeng Liu",
-                        "Santa Clara, CA",
-                        "02/21/2021");
-            case 1:
-                return new ArticleCard("EXAMPLE#01",
-                        "The future of mobile app development",
-                        5, 0,
-                        "Kedong Shao",
-                        "Santa Clara, CA",
-                        "02/21/2021");
-        }
-        return new ArticleCard();
+    public String getBody() {
+        return body;
     }
 
-    public static ArticleCard newInstance(String id, String title, int nViews, int nComments,
-                                          String author, String location, String publishDate) {
-        return new ArticleCard(id, title, nViews, nComments, author, location, publishDate);
+    public String getImageURL() {
+        return imageURL;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setnViews(int nViews) {
+        this.nViews = nViews;
+    }
+
+    public void setnComments(int nComments) {
+        this.nComments = nComments;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public void setPublishDate(String publishDate) {
+        this.publishDate = publishDate;
+    }
+
+    public void setBody(String body) {
+        this.body = body;
+    }
+
+    public void setImageURL(String imageURL) {
+        this.imageURL = imageURL;
+    }
+
+    public ArticleCard newInstance(String id, String title, int nViews, int nComments, String author, String uid, String location, String publishDate, String body, String imageURL) {
+        return new ArticleCard(id, title, nViews, nComments, author, uid, location, publishDate, body, imageURL);
     }
 }
