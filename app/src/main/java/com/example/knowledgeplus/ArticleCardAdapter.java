@@ -13,23 +13,14 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.util.ArrayList;
 
 public class ArticleCardAdapter extends ArrayAdapter<ArticleCard> {
-    public static final String ARTICLE_ID = "article_id";
-    public static final String ARTICLE_TITLE = "article_title";
-    public static final String ARTICLE_NVIEWS = "article_nviews";
-    public static final String ARTICLE_NCOMMENTS = "article_ncomments";
-    public static final String ARTICLE_AUTHOR = "article_author";
-    public static final String ARTICLE_UID = "article_UID";
-    public static final String ARTICLE_LOCATION = "article_location";
-    public static final String ARTICLE_PUBLISHDATE = "article_publishdate";
-    public static final String ARTICLE_BODY = "article_body";
-    public static final String ARTICLE_IMAGEURL = "article_iamgeURL";
     private static final String TAG = "ArticleCardAdapter";
     Context context;
-
-
 
     public ArticleCardAdapter(Context context, ArrayList<ArticleCard> articleCards) {
         super(context, 0, articleCards);
@@ -62,20 +53,12 @@ public class ArticleCardAdapter extends ArrayAdapter<ArticleCard> {
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                articleCard.setnViews(articleCard.getnViews()+1);
                 Intent intent = new Intent(context, articleDetail.class);
-                //intent.putExtra(ARTICLE_ID, articleCard.getId());
-                //intent.putExtra(ARTICLE_TITLE, articleCard.getTitle());
-                //intent.putExtra(ARTICLE_NVIEWS, articleCard.getnViews());
-                //intent.putExtra(ARTICLE_NCOMMENTS, articleCard.getnComments());
-                //intent.putExtra(ARTICLE_AUTHOR, articleCard.getAuthor());
-                //intent.putExtra(ARTICLE_UID, articleCard.getUid());
-                //intent.putExtra(ARTICLE_LOCATION, articleCard.getLocation());
-                //intent.putExtra(ARTICLE_PUBLISHDATE, articleCard.getPublishDate());
-                //intent.putExtra(ARTICLE_BODY, articleCard.getBody());
-                //intent.putExtra(ARTICLE_IMAGEURL, articleCard.getImageURL());
                 intent.putExtra("My Class", articleCard);
                 Log.i(TAG, "Start Article Details");
                 context.startActivity(intent);
+                FirebaseDatabase.getInstance().getReference("article").child(articleCard.getId()).child("nViews").setValue(articleCard.getnViews());
             }
         });
 

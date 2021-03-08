@@ -93,7 +93,6 @@ public class writeArticle extends AppCompatActivity {
         locationTV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.i("DEBUG", "Latitude is null");
                 // get location needs specific version above
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     // check whether permission to get location in granted
@@ -110,7 +109,6 @@ public class writeArticle extends AppCompatActivity {
                                         List<Address> addresses = geocoder.getFromLocation(
                                             location.getLatitude(), location.getLongitude(), 1
                                         );
-                                        Log.i("DEBUG", "Latitude is " + location.getLatitude() + ", Longitude is " + location.getLongitude());
                                         String cityName = addresses.get(0).getLocality();
                                         String stateName = addresses.get(0).getAdminArea();
                                         String countryName = addresses.get(0).getCountryName();
@@ -120,7 +118,6 @@ public class writeArticle extends AppCompatActivity {
                                         e.printStackTrace();
                                     }
                                 }
-                                Log.i("DEBUG", "Latitude is null");
                             }
                         });
                     }
