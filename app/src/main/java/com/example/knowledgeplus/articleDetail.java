@@ -72,7 +72,9 @@ public class articleDetail extends AppCompatActivity {
                     commentString += "\n\n" + comment.getUsername() +  ", " + comment.getDate() + ":\n" + comment.getText();
                 }
                 tvComment.setText(commentString);
-                tvNComments.setText(""+snapshot.getChildrenCount());
+                String nComments = ""+snapshot.getChildrenCount();
+                tvNComments.setText(nComments);
+                FirebaseDatabase.getInstance().getReference("article").child(articleCard.getId()).child("nComments").setValue(nComments);
             }
 
             @Override
