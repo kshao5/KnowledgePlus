@@ -72,7 +72,9 @@ public class articleDetail extends AppCompatActivity {
                     commentString += "\n\n" + comment.getUsername() +  ", " + comment.getDate() + ":\n" + comment.getText();
                 }
                 tvComment.setText(commentString);
-                tvNComments.setText(""+snapshot.getChildrenCount());
+                int nComments = (int)snapshot.getChildrenCount();
+                tvNComments.setText(""+nComments);
+                FirebaseDatabase.getInstance().getReference("article").child(articleCard.getId()).child("nComments").setValue(nComments);
             }
 
             @Override
@@ -98,7 +100,9 @@ public class articleDetail extends AppCompatActivity {
 
 
                 String comment_id = db.push().getKey();
-                db.child(comment_id).setValue(Comment.newInstance(comment_id, uid, username, text, Calendar.getInstance().getTime().toString()));
+                android.text.format.DateFormat df = new android.text.format.DateFormat();
+                String date = df.format("yyyy/MM/dd", Calendar.getInstance().getTime()).toString();
+                db.child(comment_id).setValue(Comment.newInstance(comment_id, uid, username, text, date));
 
                 Toast.makeText(articleDetail.this, "Comment sent", Toast.LENGTH_SHORT).show();
                 editText.setText("");

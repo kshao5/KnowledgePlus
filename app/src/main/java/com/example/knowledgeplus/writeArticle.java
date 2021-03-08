@@ -46,6 +46,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.IOException;
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -121,7 +122,6 @@ public class writeArticle extends AppCompatActivity {
         locationTV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 // get location needs specific version above
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     // check whether permission to get location in granted
@@ -190,7 +190,9 @@ public class writeArticle extends AppCompatActivity {
             String username = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
             String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-            ArticleCard articleCard = new ArticleCard(id, titleString, 0, 0, username, uid, location, Calendar.getInstance().getTime().toString(), bodyString, null);
+            android.text.format.DateFormat df = new android.text.format.DateFormat();
+            String date = df.format("yyyy/MM/dd", Calendar.getInstance().getTime()).toString();
+            ArticleCard articleCard = new ArticleCard(id, titleString, 0, 0, username, uid, location, date, bodyString, null);
             // inside the id node, the new article will be stored
             databaseReference.child(id).setValue(articleCard);
             Toast.makeText(this, "Article added", Toast.LENGTH_SHORT).show();
