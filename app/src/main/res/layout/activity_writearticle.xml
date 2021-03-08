@@ -101,7 +101,7 @@
         android:layout_height="wrap_content"
         android:text="PUBLISH"
         android:layout_gravity="center"
-        android:backgroundTint="#0abab5"
+        android:backgroundTint="@color/button"
         android:elevation="10dp"
         android:layout_marginTop="15dp"
         android:stateListAnimator="@anim/fragment_close_enter"

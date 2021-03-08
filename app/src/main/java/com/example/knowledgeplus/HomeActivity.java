@@ -14,12 +14,10 @@ import com.google.android.material.tabs.TabLayout;
 
 public class HomeActivity extends AppCompatActivity {
     ImageButton ib;
-    String userName;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-        userName = getIntent().getStringExtra("username");
         ib = (ImageButton) findViewById(R.id.publishButton);
         ib.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_IN);
         ib.setOnClickListener(new View.OnClickListener() {
@@ -27,7 +25,6 @@ public class HomeActivity extends AppCompatActivity {
             public void onClick(View v) {
                 //TODO: Start publish activity
                 Intent intent = new Intent(HomeActivity.this, writeArticle.class);
-                intent.putExtra("username", userName);
                 startActivity(intent);
             }
         });
@@ -45,7 +42,7 @@ public class HomeActivity extends AppCompatActivity {
         tabLayout.getTabAt(0).getIcon().setColorFilter(Color.BLACK, PorterDuff.Mode.SRC_IN);
         tabLayout.getTabAt(1).getIcon().setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_IN);
 
-        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 tab.getIcon().setColorFilter(Color.BLACK, PorterDuff.Mode.SRC_IN);
@@ -59,7 +56,6 @@ public class HomeActivity extends AppCompatActivity {
 
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
-
             }
         });
     }

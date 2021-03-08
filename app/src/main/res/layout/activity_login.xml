@@ -28,7 +28,9 @@
         android:layout_marginRight="20dp"
         android:id="@+id/email"
         android:textSize="20dp"
+        android:padding="10dp"
         android:layout_marginTop="60dp"
+        android:maxLines="1"
         android:background="@color/white">
     </EditText>
 
@@ -41,6 +43,8 @@
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:textSize="20dp"
+        android:padding="10dp"
+        android:maxLines="1"
         android:background="@color/white">
     </EditText>
 
@@ -53,6 +57,7 @@
         android:layout_marginTop="50dp"
         android:backgroundTint="#0abab5"
         android:elevation="10dp"
+        android:background="@color/button"
         android:stateListAnimator="@anim/fragment_close_enter"></Button>
 
     <TextView
@@ -62,5 +67,6 @@
         android:id="@+id/registerTextView"
         android:gravity="center"
         android:layout_marginTop="50dp"
+        android:textSize="20sp"
         android:textColor="@color/black"></TextView>
 </LinearLayout>

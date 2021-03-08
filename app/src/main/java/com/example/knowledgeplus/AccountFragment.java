@@ -17,15 +17,10 @@ import androidx.fragment.app.Fragment;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class AccountFragment extends Fragment  {
-    public static final String ARG_USERNAME = "ARG_USERNAME";
     private String username;
 
-    public static AccountFragment newInstance(String username) {
-        Bundle args = new Bundle();
-        args.putString(ARG_USERNAME, username);
-        AccountFragment fragment = new AccountFragment();
-        fragment.setArguments(args);
-        return fragment;
+    public static AccountFragment newInstance() {
+        return new AccountFragment();
     }
 
     @Override
@@ -37,7 +32,7 @@ public class AccountFragment extends Fragment  {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_account, container, false);
-        username = getActivity().getIntent().getStringExtra("username");
+        username = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
         TextView userNameTV = view.findViewById(R.id.username);
         userNameTV.setText(username);
 

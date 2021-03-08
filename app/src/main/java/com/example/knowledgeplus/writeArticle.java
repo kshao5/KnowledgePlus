@@ -17,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
@@ -27,18 +28,20 @@ import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
+import java.util.Calendar;
 
 public class writeArticle extends AppCompatActivity {
     DatabaseReference databaseReference;
     EditText titleET;
     EditText bodyET;
-    String userName;
+    String uid;
     FusedLocationProviderClient fusedLocationProviderClient;
     TextView locationTV;
 
@@ -46,7 +49,7 @@ public class writeArticle extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_writearticle);
-        userName = getIntent().getStringExtra("username");
+        uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
         databaseReference = FirebaseDatabase.getInstance().getReference("article");
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
@@ -147,9 +150,12 @@ public class writeArticle extends AppCompatActivity {
         if (!titleString.isEmpty() && !bodyString.isEmpty()) {
             // creating unique id for article
             String id = databaseReference.push().getKey();
-            Article article = new Article(titleString, bodyString, location, userName);
+            String username = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
+            String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+            ArticleCard articleCard = new ArticleCard(id, titleString, 0, 0, username, uid, location, Calendar.getInstance().getTime().toString(), bodyString, null);
             // inside the id node, the new article will be stored
-            databaseReference.child(id).setValue(article);
+            databaseReference.child(id).setValue(articleCard);
             Toast.makeText(this, "Article added", Toast.LENGTH_SHORT).show();
             startActivity(new Intent(writeArticle.this, HomeActivity.class));
         }
