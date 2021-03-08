@@ -72,6 +72,7 @@ public class articleDetail extends AppCompatActivity {
                     commentString += "\n\n" + comment.getUsername() +  ", " + comment.getDate() + ":\n" + comment.getText();
                 }
                 tvComment.setText(commentString);
+                tvNComments.setText(""+snapshot.getChildrenCount());
             }
 
             @Override
