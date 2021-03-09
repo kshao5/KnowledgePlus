@@ -3,6 +3,7 @@ package com.example.knowledgeplus;
 import android.Manifest;
 import android.app.ActionBar;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
@@ -24,6 +25,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
@@ -163,7 +165,18 @@ public class writeArticle extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                this.finish();
+                AlertDialog.Builder builder = new AlertDialog.Builder(writeArticle.this);
+                builder.setMessage("Go back? All modifications will be discarded")
+                        .setNegativeButton("CANCEL", null)
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                writeArticle.this.finish();
+                            }
+                        });
+                AlertDialog dialog = builder.create();
+                dialog.show();
+
                 return true;
         }
         return super.onOptionsItemSelected(item);

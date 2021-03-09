@@ -1,5 +1,6 @@
 package com.example.knowledgeplus;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,6 +13,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -76,12 +78,28 @@ public class AccountFragment extends Fragment  {
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), MainActivity.class);
-                Toast.makeText(getContext(), "You have successfully logged out", Toast.LENGTH_SHORT).show();
-                startActivity(intent);
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setMessage("Log out?")
+                        .setNegativeButton("CANCEL", null)
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                logoutUser();
+                            }
+                        });
+                AlertDialog dialog = builder.create();
+                dialog.show();
+
             }
         });
         return view;
+    }
+
+    private void logoutUser() {
+        // TODO
+        Intent intent = new Intent(getActivity(), MainActivity.class);
+        Toast.makeText(getContext(), "You have successfully logged out", Toast.LENGTH_SHORT).show();
+        startActivity(intent);
     }
 
 }

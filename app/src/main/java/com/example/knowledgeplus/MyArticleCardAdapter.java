@@ -93,7 +93,7 @@ public class MyArticleCardAdapter extends ArrayAdapter<ArticleCard> {
             @Override
             public void onClick(View v) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                builder.setMessage("Edit this article?")
+                builder.setMessage("Delete this article?")
                         .setNegativeButton("CANCEL", null)
                         .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                             @Override
