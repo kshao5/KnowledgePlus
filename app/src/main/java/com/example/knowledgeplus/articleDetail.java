@@ -1,8 +1,10 @@
 package com.example.knowledgeplus;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -111,26 +113,38 @@ public class articleDetail extends AppCompatActivity {
         send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO: show dialog
-
-                String text = editText.getText().toString().trim();
-                String username = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
-                String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-
-                if (text.isEmpty()) {
-                    Toast.makeText(articleDetail.this, "Please enter your comment", Toast.LENGTH_SHORT).show();
-                }
-
-
-                String comment_id = db.push().getKey();
-                android.text.format.DateFormat df = new android.text.format.DateFormat();
-                String date = df.format("yyyy/MM/dd", Calendar.getInstance().getTime()).toString();
-                db.child(comment_id).setValue(Comment.newInstance(comment_id, uid, username, text, date));
-
-                Toast.makeText(articleDetail.this, "Comment sent", Toast.LENGTH_SHORT).show();
-                editText.setText("");
+                AlertDialog.Builder builder = new AlertDialog.Builder(articleDetail.this);
+                builder.setMessage("Send the comment?")
+                        .setNegativeButton("CANCEL", null)
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                sendComment();
+                            }
+                        });
+                AlertDialog dialog = builder.create();
+                dialog.show();
             }
         });
+    }
+
+    private void sendComment() {
+        String text = editText.getText().toString().trim();
+        String username = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
+        String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        if (text.isEmpty()) {
+            Toast.makeText(articleDetail.this, "Please enter your comment", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        String comment_id = db.push().getKey();
+        android.text.format.DateFormat df = new android.text.format.DateFormat();
+        String date = df.format("yyyy/MM/dd", Calendar.getInstance().getTime()).toString();
+        db.child(comment_id).setValue(Comment.newInstance(comment_id, uid, username, text, date));
+
+        Toast.makeText(articleDetail.this, "Comment sent", Toast.LENGTH_SHORT).show();
+        editText.setText("");
     }
 
     private void loadImages() {
