@@ -2,6 +2,9 @@ package com.example.knowledgeplus;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,8 +16,16 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.google.android.gms.auth.api.signin.internal.Storage;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageException;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.util.ArrayList;
 
@@ -47,8 +58,21 @@ public class ArticleCardAdapter extends ArrayAdapter<ArticleCard> {
         author.setText(articleCard.author);
         publishDate.setText(articleCard.publishDate);
 
-        // TODO: set image articleCard.imageURL
-        imageView.setImageResource(R.drawable.mirror);
+        Log.i(TAG, "Article " + articleCard.getTitle() + ", has " + articleCard.getnImages() + " images");
+        if (articleCard.nImages == 0) {
+            imageView.setImageResource(R.drawable.knowledge);
+        } else {
+            StorageReference imageReference = FirebaseStorage.getInstance().getReference().child("images").child(articleCard.getId()).child("0");
+            imageReference.getBytes(1024*1024)
+                    .addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                        @Override
+                        public void onSuccess(byte[] bytes) {
+                            Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                            imageView.setImageBitmap(bitmap);
+                        }
+                    });
+        }
+
 
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override

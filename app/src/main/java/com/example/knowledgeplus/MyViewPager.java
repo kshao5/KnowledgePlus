@@ -32,7 +32,7 @@ public class MyViewPager extends ViewPager {
         return false;
     }
 
-    private void setMyScroller() {
+    public void setMyScroller() {
         try {
             Class<?> viewpager = ViewPager.class;
             Field scroller = viewpager.getDeclaredField("mScroller");
