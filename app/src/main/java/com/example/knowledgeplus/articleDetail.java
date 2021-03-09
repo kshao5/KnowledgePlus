@@ -40,6 +40,7 @@ import java.util.Calendar;
 // for displaying detail of article
 public class articleDetail extends AppCompatActivity {
     private final String TAG = "ArticleDetail";
+    private final int MAX_DOWNLOAD_BUFFER_SIZE = 1024*1024*100; //100MB
     ArticleCard articleCard;
     TextView tvTitle, tvAuthor, tvLocation, tvPublishDate, tvNViews, tvNComments, tvBody, tvComment;
     EditText editText;
@@ -162,7 +163,7 @@ public class articleDetail extends AppCompatActivity {
         imageReference = FirebaseStorage.getInstance().getReference().child("images").child(articleCard.getId());
 
         for (int i = 0; i < articleCard.getnImages(); i++) {
-            imageReference.child(""+i).getBytes(1024*1024).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+            imageReference.child(""+i).getBytes(MAX_DOWNLOAD_BUFFER_SIZE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
                 @Override
                 public void onSuccess(byte[] bytes) {
                     Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);

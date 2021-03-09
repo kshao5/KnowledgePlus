@@ -31,6 +31,7 @@ import java.util.ArrayList;
 
 public class ArticleCardAdapter extends ArrayAdapter<ArticleCard> {
     private static final String TAG = "ArticleCardAdapter";
+    private final int MAX_DOWNLOAD_BUFFER_SIZE = 1024*1024*10; //10MB
     Context context;
 
     public ArticleCardAdapter(Context context, ArrayList<ArticleCard> articleCards) {
@@ -63,7 +64,7 @@ public class ArticleCardAdapter extends ArrayAdapter<ArticleCard> {
             imageView.setImageResource(R.drawable.knowledge);
         } else {
             StorageReference imageReference = FirebaseStorage.getInstance().getReference().child("images").child(articleCard.getId()).child("0");
-            imageReference.getBytes(1024*1024)
+            imageReference.getBytes(MAX_DOWNLOAD_BUFFER_SIZE)
                     .addOnSuccessListener(new OnSuccessListener<byte[]>() {
                         @Override
                         public void onSuccess(byte[] bytes) {
