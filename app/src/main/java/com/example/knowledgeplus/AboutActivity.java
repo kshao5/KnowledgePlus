@@ -19,18 +19,7 @@ public class AboutActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                AlertDialog.Builder builder = new AlertDialog.Builder(AboutActivity.this);
-                builder.setMessage("Send the comment?")
-                        .setNegativeButton("CANCEL", null)
-                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                AboutActivity.this.finish();
-                            }
-                        });
-                AlertDialog dialog = builder.create();
-                dialog.show();
-
+                this.finish();
                 return true;
         }
         return super.onOptionsItemSelected(item);

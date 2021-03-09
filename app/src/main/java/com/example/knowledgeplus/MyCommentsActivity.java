@@ -1,15 +1,25 @@
 package com.example.knowledgeplus;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.ListView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import java.util.ArrayList;
 
 public class MyCommentsActivity extends AppCompatActivity {
     ListView listView;
+    DatabaseReference commentReference = FirebaseDatabase.getInstance().getReference("comment");
+    String uid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,13 +30,32 @@ public class MyCommentsActivity extends AppCompatActivity {
         listView = findViewById(R.id.listView);
 
         ArrayList<CommentCard> commentCards = new ArrayList<CommentCard>();
+        uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-        commentCards.add(CommentCard.newExample(0));
-        commentCards.add(CommentCard.newExample(1));
+        commentReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                commentCards.clear();
+                for (DataSnapshot allCommentsInArticle : snapshot.getChildren()) {
+                    for (DataSnapshot comment : allCommentsInArticle.getChildren()) {
+                        CommentCard commentCard = comment.getValue(CommentCard.class);
+                        if (commentCard.getUid().compareTo(uid) == 0) {
+                            commentCards.add(0, commentCard);
+                        }
+                    }
+                }
 
-        CommentCardAdapter commentCardAdapter = new CommentCardAdapter(this, commentCards);
+                CommentCardAdapter commentCardAdapter = new CommentCardAdapter(MyCommentsActivity.this, commentCards);
+                listView.setAdapter(commentCardAdapter);
+            }
 
-        listView.setAdapter(commentCardAdapter);
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                //Nothing
+            }
+        });
+
+
     }
 
     @Override

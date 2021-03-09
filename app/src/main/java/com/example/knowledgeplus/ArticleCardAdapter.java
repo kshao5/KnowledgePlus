@@ -80,7 +80,7 @@ public class ArticleCardAdapter extends ArrayAdapter<ArticleCard> {
             public void onClick(View v) {
                 articleCard.setnViews(articleCard.getnViews()+1);
                 Intent intent = new Intent(context, articleDetail.class);
-                intent.putExtra("My Class", articleCard);
+                intent.putExtra(articleDetail.ARTICLE_CARD, articleCard);
                 Log.i(TAG, "Start Article Details");
                 context.startActivity(intent);
                 FirebaseDatabase.getInstance().getReference("article").child(articleCard.getId()).child("nViews").setValue(articleCard.getnViews());

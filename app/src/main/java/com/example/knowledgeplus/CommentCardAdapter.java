@@ -13,14 +13,31 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+
 import java.util.ArrayList;
 
 public class CommentCardAdapter extends ArrayAdapter<CommentCard> {
-    final String TAG = "CommentCardAdapter";
+    private final String TAG = "CommentCardAdapter";
+    private final int MAX_COMMENT_TEXT = 45;
+    ArticleCard[] articleCards;
+
     Context context;
+
+    TextView comment;
+    TextView articleTitle;
+    TextView publishDate;
+    ImageButton delete;
+
     public CommentCardAdapter(Context context, ArrayList<CommentCard> commentCards) {
         super(context, 0, commentCards);
         this.context = context;
+        articleCards = new ArticleCard[commentCards.size()];
     }
 
     @NonNull
@@ -32,37 +49,65 @@ public class CommentCardAdapter extends ArrayAdapter<CommentCard> {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.my_comment_card, parent, false);
         }
 
-        TextView comment = (TextView) convertView.findViewById(R.id.comment);
-        TextView articleTitle = (TextView) convertView.findViewById(R.id.articleTitle);
-        TextView publishDate = (TextView) convertView.findViewById(R.id.publishDate);
-        ImageButton delete = (ImageButton) convertView.findViewById(R.id.deleteIcon);
+        comment = (TextView) convertView.findViewById(R.id.comment);
+        articleTitle = (TextView) convertView.findViewById(R.id.articleTitle);
+        publishDate = (TextView) convertView.findViewById(R.id.publishDate);
+        delete = (ImageButton) convertView.findViewById(R.id.deleteIcon);
 
-        comment.setText(commentCard.content);
-        articleTitle.setText(commentCard.articleTitle);
-        publishDate.setText(commentCard.publishDate);
+        setText(commentCard);
+        setArticleTitle(position, commentCard);
+        publishDate.setText(commentCard.date);
 
         delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO: Delete this comment
-                Log.i(TAG, "TODO: Delete this comment");
+                Log.i(TAG, "Remove comment: " + commentCard.getText());
+                FirebaseDatabase.getInstance().getReference("comment")
+                        .child(commentCard.getAid())
+                        .child(commentCard.getId())
+                        .removeValue();
             }
         });
-
 
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO: Start an "ArticleDetails" activity
-                Log.i(TAG,"TODO: Start 'ArticleDetails' Activity");
                 Intent intent = new Intent(context, articleDetail.class);
-                //intent.putExtra("ARTICLE_ID", articleCards.get(position).getId());
+                intent.putExtra(articleDetail.ARTICLE_CARD, articleCards[position]);
                 context.startActivity(intent);
             }
         });
 
-
         return convertView;
     }
 
+    private void setText(CommentCard commentCard) {
+        String text = commentCard.getText();
+        if (text.length() > MAX_COMMENT_TEXT) {
+            comment.setText(text.substring(0, MAX_COMMENT_TEXT) + "...");
+        } else {
+            comment.setText(text);
+        }
+    }
+
+    private void setArticleTitle(int position, CommentCard commentCard) {
+        Query query = FirebaseDatabase.getInstance().getReference("article")
+                .orderByChild("id")
+                .equalTo(commentCard.getAid());
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    ArticleCard articleCard = dataSnapshot.getValue(ArticleCard.class);
+                    articleCards[position] = articleCard;
+                    articleTitle.setText(articleCard.getTitle());
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
 }

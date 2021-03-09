@@ -41,6 +41,7 @@ import java.util.Calendar;
 public class articleDetail extends AppCompatActivity {
     private final String TAG = "ArticleDetail";
     private final int MAX_DOWNLOAD_BUFFER_SIZE = 1024*1024*100; //100MB
+    public static final String ARTICLE_CARD = "article_card";
     ArticleCard articleCard;
     TextView tvTitle, tvAuthor, tvLocation, tvPublishDate, tvNViews, tvNComments, tvBody, tvComment;
     EditText editText;
@@ -56,7 +57,7 @@ public class articleDetail extends AppCompatActivity {
         setContentView(R.layout.activity_article_detail);
 
         Intent intent = getIntent();
-        articleCard = (ArticleCard) intent.getSerializableExtra("My Class");
+        articleCard = (ArticleCard) intent.getSerializableExtra(ARTICLE_CARD);
 
         tvTitle = (TextView) findViewById(R.id.textViewTitle);
         tvAuthor = (TextView) findViewById(R.id.textViewAuthor);
@@ -90,7 +91,7 @@ public class articleDetail extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 String commentString = "";
                 for (DataSnapshot commentSnapshot : snapshot.getChildren()) {
-                    Comment comment = commentSnapshot.getValue(Comment.class);
+                    CommentCard comment = commentSnapshot.getValue(CommentCard.class);
                     commentString += "\n" + comment.getUsername() +  ", " + comment.getDate() + ":\n" + comment.getText() + "\n";
                 }
                 tvComment.setText(commentString);
@@ -144,7 +145,7 @@ public class articleDetail extends AppCompatActivity {
         String comment_id = db.push().getKey();
         android.text.format.DateFormat df = new android.text.format.DateFormat();
         String date = df.format("yyyy/MM/dd", Calendar.getInstance().getTime()).toString();
-        db.child(comment_id).setValue(Comment.newInstance(comment_id, uid, username, text, date));
+        db.child(comment_id).setValue(CommentCard.newInstance(comment_id, uid, username, articleCard.getId(), text, date));
 
         Toast.makeText(articleDetail.this, "Comment sent", Toast.LENGTH_SHORT).show();
         editText.setText("");
