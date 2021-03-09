@@ -134,12 +134,6 @@
                     android:textSize="20dp" />
             </LinearLayout>
 
-            <ImageView
-                android:id="@+id/imageView"
-                android:layout_width="match_parent"
-                android:layout_height="146dp"
-                android:layout_marginTop="10dp"
-                android:src="@drawable/vegetables" />
 
             <TextView
                 android:id="@+id/textViewBody"
@@ -153,6 +147,14 @@ But the researchers’ definition of a serving size was slightly larger than in 
                 android:textColor="@color/black"
                 android:textSize="17dp" />
 
+            <LinearLayout
+                android:id="@+id/images"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/background"
+                android:layout_gravity="center_horizontal"
+                android:orientation="vertical"/>
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -161,6 +163,7 @@ But the researchers’ definition of a serving size was slightly larger than in 
                 android:text="COMMENTS"
                 android:textColor="@color/black"
                 android:textSize="17dp"
+                android:layout_marginTop="30dp"
                 android:textStyle="italic" />
 
             <TextView
@@ -173,6 +176,9 @@ But the researchers’ definition of a serving size was slightly larger than in 
                 android:text="User A: \nVery useful article!"
                 android:textColor="@color/black"
                 android:textSize="17dp" />
+
+
+
         </LinearLayout>
     </ScrollView>
 

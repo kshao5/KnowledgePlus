@@ -21,9 +21,9 @@
             </intent-filter>
         </activity>
         <activity android:name=".MyCommentsActivity" />
-        <activity android:name=".MyArticlesActivity" />
-        <activity android:name=".AboutActivity" />
-        <activity android:name=".ProfileActivity" />
+        <activity android:name=".MyArticlesActivity"/>
+        <activity android:name=".AboutActivity"/>
+        <activity android:name=".ProfileActivity"/>
         <activity android:name=".articleDetail" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

@@ -57,8 +57,7 @@ public class HomeFragment extends Fragment {
                 for (DataSnapshot articleSnapshot : snapshot.getChildren()) {
                     ArticleCard articleCard = articleSnapshot.getValue(ArticleCard.class);
 
-                    // TODO: set Image ?
-                    articleCards.add(ArticleCard.newInstance(articleCard.getId(),
+                    articleCards.add(0, ArticleCard.newInstance(articleCard.getId(),
                                                              articleCard.getTitle(),
                                                              articleCard.getnViews(),
                                                              articleCard.getnComments(),
@@ -67,11 +66,11 @@ public class HomeFragment extends Fragment {
                                                              articleCard.getLocation(),
                                                              articleCard.getPublishDate(),
                                                              articleCard.getBody(),
-                                                             null));
+                                                             articleCard.getnImages()));
 
-                    ArticleCardAdapter articleCardAdapter = new ArticleCardAdapter(getContext(), articleCards);
-                    listView.setAdapter(articleCardAdapter);
                 }
+                ArticleCardAdapter articleCardAdapter = new ArticleCardAdapter(getContext(), articleCards);
+                listView.setAdapter(articleCardAdapter);
             }
 
             @Override

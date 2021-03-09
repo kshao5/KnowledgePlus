@@ -28,13 +28,15 @@
 
     <EditText
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="75dp"
         android:layout_marginTop="5dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:hint="title"
+        android:hint="Add a title"
         android:background="@color/white"
         android:id = "@+id/title"
+        android:gravity="start"
+        android:padding="10dp"
         ></EditText>
 
     <TextView
@@ -53,9 +55,11 @@
         android:layout_marginTop="5dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:hint="Body"
+        android:hint="Add a body"
         android:inputType="textMultiLine"
         android:background="@color/white"
+        android:gravity="start"
+        android:padding="10dp"
         android:id = "@+id/body">
     </EditText>
 

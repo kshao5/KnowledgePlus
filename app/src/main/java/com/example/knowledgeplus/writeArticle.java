@@ -66,6 +66,7 @@ public class writeArticle extends AppCompatActivity {
     private StorageReference storageReference;
     String id;
     TextView imageIndicatorTV;
+    int nImages = 0;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -192,12 +193,12 @@ public class writeArticle extends AppCompatActivity {
 
             android.text.format.DateFormat df = new android.text.format.DateFormat();
             String date = df.format("yyyy/MM/dd", Calendar.getInstance().getTime()).toString();
-            ArticleCard articleCard = new ArticleCard(id, titleString, 0, 0, username, uid, location, date, bodyString, null);
+            fusedLocationProviderClient.removeLocationUpdates(locationCallback);
+            uploadImage();
+            ArticleCard articleCard = new ArticleCard(id, titleString, 0, 0, username, uid, location, date, bodyString, nImages);
             // inside the id node, the new article will be stored
             databaseReference.child(id).setValue(articleCard);
             Toast.makeText(this, "Article added", Toast.LENGTH_SHORT).show();
-            fusedLocationProviderClient.removeLocationUpdates(locationCallback);
-            uploadImage();
             startActivity(new Intent(writeArticle.this, HomeActivity.class));
         }
         else {
@@ -235,6 +236,7 @@ public class writeArticle extends AppCompatActivity {
         pd.setTitle("Uploading Image...");
         pd.show();
 
+        nImages = imageUri.size();
         for (int i = 0; i < imageUri.size(); i++) {
             StorageReference imageRef = storageReference.child("images/" + id + "/" + i);
             imageRef.putFile(imageUri.get(i))

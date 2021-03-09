@@ -27,7 +27,7 @@
             android:id="@+id/username"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Taipeng Liu"
+            android:text="Unknown"
             android:textSize="20sp"
             android:textColor="@color/black"
             android:layout_alignParentRight="true"/>
@@ -56,13 +56,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:text="tliu4@scu.edu"
+            android:text="unknown"
             android:textColor="@android:color/darker_gray"
             android:textSize="20sp"/>
     </RelativeLayout>
 
     <Button
-        android:id="@+id/myArticlesButton"
+        android:id="@+id/changePasswordButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="start"
