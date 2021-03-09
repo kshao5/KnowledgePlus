@@ -18,6 +18,7 @@ import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -55,41 +56,54 @@ import java.util.Locale;
 import java.util.Calendar;
 
 public class writeArticle extends AppCompatActivity {
+    public static final String EDIT_MODE = "write_mode";
+    public static final String ARTICLE_CARD = "article_card";
+
+    boolean isEditMode;
+    ArticleCard articleCard;
+
     DatabaseReference databaseReference;
+    FirebaseStorage storage;
+    StorageReference storageReference;
+    String uid;
+    String id;
+    int nImages = 0;
+
     EditText titleET;
     EditText bodyET;
-    String uid;
+    TextView imageIndicatorTV, locationTV;
+    Button publishButton;
+
     FusedLocationProviderClient fusedLocationProviderClient;
-    TextView locationTV;
     LocationCallback locationCallback;
     Task<Location> location;
-    public List<Uri> imageUri;
-    private FirebaseStorage storage;
-    private StorageReference storageReference;
-    String id;
-    TextView imageIndicatorTV;
-    int nImages = 0;
+
+    List<Uri> imageUri;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d(String.valueOf(getApplicationContext()), "onCreate");
         setContentView(R.layout.activity_writearticle);
-        uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        Intent intent = getIntent();
+        isEditMode = intent.getBooleanExtra(EDIT_MODE, false);
+        if (isEditMode) {
+            articleCard = (ArticleCard) intent.getSerializableExtra(ARTICLE_CARD);
+        }
+
         databaseReference = FirebaseDatabase.getInstance().getReference("article");
-        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
+        uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        titleET = (EditText) findViewById(R.id.title);
+        bodyET = (EditText) findViewById(R.id.body);
         imageIndicatorTV = findViewById(R.id.imageIndicatorTV);
+        locationTV = findViewById(R.id.location);
+        publishButton = (Button) findViewById(R.id.publishButton);
 
-        imageUri = new ArrayList<>();
-
-        imageIndicatorTV.setVisibility(View.INVISIBLE);
-
-
-        LocationRequest locationRequest = LocationRequest.create();
-        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        locationRequest.setInterval(20 * 1000);
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         locationCallback = new LocationCallback() {
             @Override
             public void onLocationResult(LocationResult locationResult) {
@@ -104,24 +118,17 @@ public class writeArticle extends AppCompatActivity {
                 }
             }
         };
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
-        }
-        fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper());
-        location = fusedLocationProviderClient.getLastLocation();
+        location = getLastLocation();
+
+        imageUri = new ArrayList<>();
+
+        imageIndicatorTV.setVisibility(View.INVISIBLE);
+
+
 
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        titleET = (EditText) findViewById(R.id.title);
-        bodyET = (EditText) findViewById(R.id.body);
-        locationTV = findViewById(R.id.location);
+
         locationTV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -161,25 +168,24 @@ public class writeArticle extends AppCompatActivity {
         });
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                AlertDialog.Builder builder = new AlertDialog.Builder(writeArticle.this);
-                builder.setMessage("Go back? All modifications will be discarded")
-                        .setNegativeButton("CANCEL", null)
-                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                writeArticle.this.finish();
-                            }
-                        });
-                AlertDialog dialog = builder.create();
-                dialog.show();
 
-                return true;
+    private Task<Location> getLastLocation() {
+        LocationRequest locationRequest = LocationRequest.create();
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        locationRequest.setInterval(20 * 1000);
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return null;
         }
-        return super.onOptionsItemSelected(item);
+        fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper());
+        return fusedLocationProviderClient.getLastLocation();
     }
 
     @Override
@@ -277,6 +283,27 @@ public class writeArticle extends AppCompatActivity {
         }
 
 
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                AlertDialog.Builder builder = new AlertDialog.Builder(writeArticle.this);
+                builder.setMessage("Go back? All modifications will be discarded")
+                        .setNegativeButton("CANCEL", null)
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                writeArticle.this.finish();
+                            }
+                        });
+                AlertDialog dialog = builder.create();
+                dialog.show();
+
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
 }
