@@ -2,6 +2,9 @@ package com.example.knowledgeplus;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,23 +16,22 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.google.android.gms.auth.api.signin.internal.Storage;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageException;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+
 import java.util.ArrayList;
 
 public class ArticleCardAdapter extends ArrayAdapter<ArticleCard> {
-    public static final String ARTICLE_ID = "article_id";
-    public static final String ARTICLE_TITLE = "article_title";
-    public static final String ARTICLE_NVIEWS = "article_nviews";
-    public static final String ARTICLE_NCOMMENTS = "article_ncomments";
-    public static final String ARTICLE_AUTHOR = "article_author";
-    public static final String ARTICLE_UID = "article_UID";
-    public static final String ARTICLE_LOCATION = "article_location";
-    public static final String ARTICLE_PUBLISHDATE = "article_publishdate";
-    public static final String ARTICLE_BODY = "article_body";
-    public static final String ARTICLE_IMAGEURL = "article_iamgeURL";
     private static final String TAG = "ArticleCardAdapter";
     Context context;
-
-
 
     public ArticleCardAdapter(Context context, ArrayList<ArticleCard> articleCards) {
         super(context, 0, articleCards);
@@ -56,26 +58,31 @@ public class ArticleCardAdapter extends ArrayAdapter<ArticleCard> {
         author.setText(articleCard.author);
         publishDate.setText(articleCard.publishDate);
 
-        // TODO: set image articleCard.imageURL
-        imageView.setImageResource(R.drawable.mirror);
+        Log.i(TAG, "Article " + articleCard.getTitle() + ", has " + articleCard.getnImages() + " images");
+        if (articleCard.nImages == 0) {
+            imageView.setImageResource(R.drawable.knowledge);
+        } else {
+            StorageReference imageReference = FirebaseStorage.getInstance().getReference().child("images").child(articleCard.getId()).child("0");
+            imageReference.getBytes(1024*1024)
+                    .addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                        @Override
+                        public void onSuccess(byte[] bytes) {
+                            Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                            imageView.setImageBitmap(bitmap);
+                        }
+                    });
+        }
+
 
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                articleCard.setnViews(articleCard.getnViews()+1);
                 Intent intent = new Intent(context, articleDetail.class);
-                //intent.putExtra(ARTICLE_ID, articleCard.getId());
-                //intent.putExtra(ARTICLE_TITLE, articleCard.getTitle());
-                //intent.putExtra(ARTICLE_NVIEWS, articleCard.getnViews());
-                //intent.putExtra(ARTICLE_NCOMMENTS, articleCard.getnComments());
-                //intent.putExtra(ARTICLE_AUTHOR, articleCard.getAuthor());
-                //intent.putExtra(ARTICLE_UID, articleCard.getUid());
-                //intent.putExtra(ARTICLE_LOCATION, articleCard.getLocation());
-                //intent.putExtra(ARTICLE_PUBLISHDATE, articleCard.getPublishDate());
-                //intent.putExtra(ARTICLE_BODY, articleCard.getBody());
-                //intent.putExtra(ARTICLE_IMAGEURL, articleCard.getImageURL());
                 intent.putExtra("My Class", articleCard);
                 Log.i(TAG, "Start Article Details");
                 context.startActivity(intent);
+                FirebaseDatabase.getInstance().getReference("article").child(articleCard.getId()).child("nViews").setValue(articleCard.getnViews());
             }
         });
 

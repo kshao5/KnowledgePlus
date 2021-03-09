@@ -12,12 +12,12 @@ public class ArticleCard implements Serializable {
     String location;
     String publishDate;
     String body;
-    String imageURL;
+    int nImages;
 
     public ArticleCard() {
     }
 
-    public ArticleCard(String id, String title, int nViews, int nComments, String author, String uid, String location, String publishDate, String body, String imageURL) {
+    public ArticleCard(String id, String title, int nViews, int nComments, String author, String uid, String location, String publishDate, String body, int nImages) {
         this.id = id;
         this.title = title;
         this.nViews = nViews;
@@ -27,7 +27,7 @@ public class ArticleCard implements Serializable {
         this.location = location;
         this.publishDate = publishDate;
         this.body = body;
-        this.imageURL = imageURL;
+        this.nImages = nImages;
     }
 
     public String getId() {
@@ -66,8 +66,8 @@ public class ArticleCard implements Serializable {
         return body;
     }
 
-    public String getImageURL() {
-        return imageURL;
+    public int getnImages() {
+        return nImages;
     }
 
     public void setTitle(String title) {
@@ -94,11 +94,11 @@ public class ArticleCard implements Serializable {
         this.body = body;
     }
 
-    public void setImageURL(String imageURL) {
-        this.imageURL = imageURL;
+    public void setnImages(int nImages) {
+        this.nImages = nImages;
     }
 
-    public static ArticleCard newInstance(String id, String title, int nViews, int nComments, String author, String uid, String location, String publishDate, String body, String imageURL) {
-        return new ArticleCard(id, title, nViews, nComments, author, uid, location, publishDate, body, imageURL);
+    public static ArticleCard newInstance(String id, String title, int nViews, int nComments, String author, String uid, String location, String publishDate, String body, int nImages) {
+        return new ArticleCard(id, title, nViews, nComments, author, uid, location, publishDate, body, nImages);
     }
 }

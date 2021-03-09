@@ -17,6 +17,7 @@ import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -46,6 +47,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.IOException;
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -65,6 +67,8 @@ public class writeArticle extends AppCompatActivity {
     private StorageReference storageReference;
     String id;
     TextView imageIndicatorTV;
+    int nImages = 0;
+    Button publishButton;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -77,7 +81,21 @@ public class writeArticle extends AppCompatActivity {
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
         imageIndicatorTV = findViewById(R.id.imageIndicatorTV);
+        titleET = (EditText) findViewById(R.id.title);
+        if (titleET == null) {
+            System.out.println("130");
+        }
+        bodyET = findViewById(R.id.body);
+        locationTV = findViewById(R.id.location);
 
+
+        publishButton = (Button)findViewById(R.id.publish);
+        publishButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addArticle();
+            }
+        });
         imageUri = new ArrayList<>();
 
         imageIndicatorTV.setVisibility(View.INVISIBLE);
@@ -115,13 +133,10 @@ public class writeArticle extends AppCompatActivity {
 
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        titleET = (EditText) findViewById(R.id.title);
-        bodyET = (EditText) findViewById(R.id.body);
-        locationTV = findViewById(R.id.location);
+
         locationTV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 // get location needs specific version above
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     // check whether permission to get location in granted
@@ -177,7 +192,10 @@ public class writeArticle extends AppCompatActivity {
         }
     }
 
-    public void addArticle(View view) {
+    public void addArticle() {
+        if (titleET == null) {
+            Log.d("195", "titleString is null");
+        }
         String titleString = titleET.getText().toString();
         String bodyString = bodyET.getText().toString();
         String location = locationTV.getText().toString();
@@ -190,12 +208,14 @@ public class writeArticle extends AppCompatActivity {
             String username = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
             String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-            ArticleCard articleCard = new ArticleCard(id, titleString, 0, 0, username, uid, location, Calendar.getInstance().getTime().toString(), bodyString, null);
+            android.text.format.DateFormat df = new android.text.format.DateFormat();
+            String date = df.format("yyyy/MM/dd", Calendar.getInstance().getTime()).toString();
+            fusedLocationProviderClient.removeLocationUpdates(locationCallback);
+            uploadImage();
+            ArticleCard articleCard = new ArticleCard(id, titleString, 0, 0, username, uid, location, date, bodyString, nImages);
             // inside the id node, the new article will be stored
             databaseReference.child(id).setValue(articleCard);
             Toast.makeText(this, "Article added", Toast.LENGTH_SHORT).show();
-            fusedLocationProviderClient.removeLocationUpdates(locationCallback);
-            uploadImage();
             startActivity(new Intent(writeArticle.this, HomeActivity.class));
         }
         else {
@@ -233,6 +253,7 @@ public class writeArticle extends AppCompatActivity {
         pd.setTitle("Uploading Image...");
         pd.show();
 
+        nImages = imageUri.size();
         for (int i = 0; i < imageUri.size(); i++) {
             StorageReference imageRef = storageReference.child("images/" + id + "/" + i);
             imageRef.putFile(imageUri.get(i))
