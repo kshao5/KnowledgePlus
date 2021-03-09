@@ -35,8 +35,8 @@ public class AccountFragment extends Fragment  {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_account, container, false);
         username = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
-        TextView userNameTV = view.findViewById(R.id.username);
-        userNameTV.setText(username);
+        //TextView userNameTV = view.findViewById(R.id.username);
+        //userNameTV.setText(username);
 
         Button profile = (Button) view.findViewById(R.id.profileButton);
         profile.setOnClickListener(new View.OnClickListener() {
@@ -94,6 +94,8 @@ public class AccountFragment extends Fragment  {
         });
         return view;
     }
+
+    // TODO : user can upload profile image
 
     private void logoutUser() {
         // TODO

@@ -32,7 +32,10 @@ import java.util.ArrayList;
 public class ArticleCardAdapter extends ArrayAdapter<ArticleCard> {
     private static final String TAG = "ArticleCardAdapter";
     private final int MAX_DOWNLOAD_BUFFER_SIZE = 1024*1024*10; //10MB
+
     Context context;
+    ImageView imageView;
+    TextView title, nViews_nComments, author, publishDate;
 
     public ArticleCardAdapter(Context context, ArrayList<ArticleCard> articleCards) {
         super(context, 0, articleCards);
@@ -48,18 +51,33 @@ public class ArticleCardAdapter extends ArrayAdapter<ArticleCard> {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.article_card, parent, false);
         }
 
-        ImageView imageView = (ImageView) convertView.findViewById(R.id.imageView);
-        TextView title = (TextView) convertView.findViewById(R.id.title);
-        TextView nViews_nComments = (TextView) convertView.findViewById(R.id.nViews_nComments);
-        TextView author = (TextView) convertView.findViewById(R.id.author);
-        TextView publishDate = (TextView) convertView.findViewById(R.id.publishDate);
+        imageView = (ImageView) convertView.findViewById(R.id.imageView);
+        title = (TextView) convertView.findViewById(R.id.title);
+        nViews_nComments = (TextView) convertView.findViewById(R.id.nViews_nComments);
+        author = (TextView) convertView.findViewById(R.id.author);
+        publishDate = (TextView) convertView.findViewById(R.id.publishDate);
 
         title.setText(articleCard.title);
         nViews_nComments.setText(articleCard.nViews+" views, "+articleCard.nComments+" comments");
         author.setText(articleCard.author);
         publishDate.setText(articleCard.publishDate);
+        setImage(articleCard);
 
-        Log.i(TAG, "Article " + articleCard.getTitle() + ", has " + articleCard.getnImages() + " images");
+        convertView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                articleCard.setnViews(articleCard.getnViews()+1);
+                Intent intent = new Intent(context, articleDetail.class);
+                intent.putExtra(articleDetail.ARTICLE_CARD, articleCard);
+                context.startActivity(intent);
+                FirebaseDatabase.getInstance().getReference("article").child(articleCard.getId()).child("nViews").setValue(articleCard.getnViews());
+            }
+        });
+
+        return convertView;
+    }
+
+    private void setImage(ArticleCard articleCard) {
         if (articleCard.nImages == 0) {
             imageView.setImageResource(R.drawable.knowledge);
         } else {
@@ -73,20 +91,5 @@ public class ArticleCardAdapter extends ArrayAdapter<ArticleCard> {
                         }
                     });
         }
-
-
-        convertView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                articleCard.setnViews(articleCard.getnViews()+1);
-                Intent intent = new Intent(context, articleDetail.class);
-                intent.putExtra(articleDetail.ARTICLE_CARD, articleCard);
-                Log.i(TAG, "Start Article Details");
-                context.startActivity(intent);
-                FirebaseDatabase.getInstance().getReference("article").child(articleCard.getId()).child("nViews").setValue(articleCard.getnViews());
-            }
-        });
-
-        return convertView;
     }
 }

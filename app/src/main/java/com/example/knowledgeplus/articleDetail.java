@@ -36,8 +36,6 @@ import com.google.firebase.storage.StorageReference;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-//TODO
-// for displaying detail of article
 public class articleDetail extends AppCompatActivity {
     private final String TAG = "ArticleDetail";
     private final int MAX_DOWNLOAD_BUFFER_SIZE = 1024*1024*100; //100MB
@@ -75,36 +73,21 @@ public class articleDetail extends AppCompatActivity {
 
         tvTitle.setText(articleCard.getTitle());
         tvAuthor.setText(articleCard.getAuthor());
-        if (articleCard.getLocation() == null || articleCard.getLocation().isEmpty()) {
-            tvLocation.setText("Unknown");
-        } else {
-            tvLocation.setText(articleCard.getLocation());
-        }
         tvPublishDate.setText(articleCard.getPublishDate());
         tvNViews.setText(""+articleCard.getnViews());
         tvNComments.setText(""+articleCard.getnComments());
         tvBody.setText(articleCard.getBody());
 
-        db = FirebaseDatabase.getInstance().getReference("comment").child(articleCard.getId());
-        db.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                String commentString = "";
-                for (DataSnapshot commentSnapshot : snapshot.getChildren()) {
-                    CommentCard comment = commentSnapshot.getValue(CommentCard.class);
-                    commentString += "\n" + comment.getUsername() +  ", " + comment.getDate() + ":\n" + comment.getText() + "\n";
-                }
-                tvComment.setText(commentString);
-                int nComments = (int)snapshot.getChildrenCount();
-                tvNComments.setText(""+nComments);
-                FirebaseDatabase.getInstance().getReference("article").child(articleCard.getId()).child("nComments").setValue(nComments);
-            }
+        // set location
+        if (articleCard.getLocation() == null || articleCard.getLocation().isEmpty()) {
+            tvLocation.setText("Unknown");
+        } else {
+            tvLocation.setText(articleCard.getLocation());
+        }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                //Nothing
-            }
-        });
+        // set all comments
+        db = FirebaseDatabase.getInstance().getReference("comment").child(articleCard.getId());
+        db.addValueEventListener(listAllCommentsListener);
 
         // set imageView
         if (articleCard.nImages == 0) {
@@ -113,7 +96,7 @@ public class articleDetail extends AppCompatActivity {
             loadImages();
         }
 
-        // set send button
+        // set send-comment button
         send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -177,4 +160,23 @@ public class articleDetail extends AppCompatActivity {
         }
     }
 
+    ValueEventListener listAllCommentsListener = new ValueEventListener() {
+        @Override
+        public void onDataChange(@NonNull DataSnapshot snapshot) {
+            String commentString = "";
+            for (DataSnapshot commentSnapshot : snapshot.getChildren()) {
+                CommentCard comment = commentSnapshot.getValue(CommentCard.class);
+                commentString += "\n" + comment.getUsername() +  ", " + comment.getDate() + ":\n" + comment.getText() + "\n";
+            }
+            tvComment.setText(commentString);
+            int nComments = (int)snapshot.getChildrenCount();
+            tvNComments.setText(""+nComments);
+            FirebaseDatabase.getInstance().getReference("article").child(articleCard.getId()).child("nComments").setValue(nComments);
+        }
+
+        @Override
+        public void onCancelled(@NonNull DatabaseError error) {
+            //Nothing
+        }
+    };
 }
