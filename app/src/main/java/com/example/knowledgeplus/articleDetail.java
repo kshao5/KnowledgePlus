@@ -20,6 +20,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.knowledgeplus.SendNotificationPack.APIService;
+import com.example.knowledgeplus.SendNotificationPack.Client;
+import com.example.knowledgeplus.SendNotificationPack.Data;
+import com.example.knowledgeplus.SendNotificationPack.MyResponse;
+import com.example.knowledgeplus.SendNotificationPack.NotificationSender;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -34,6 +39,10 @@ import com.google.firebase.storage.StorageReference;
 import java.util.ArrayList;
 import java.util.Calendar;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 //TODO
 // for displaying detail of article
 public class articleDetail extends AppCompatActivity {
@@ -46,6 +55,8 @@ public class articleDetail extends AppCompatActivity {
     DatabaseReference db;
     StorageReference imageReference;
     LinearLayout.LayoutParams lp;
+
+    private APIService apiService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +79,7 @@ public class articleDetail extends AppCompatActivity {
         images = (LinearLayout) findViewById(R.id.images);
         lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,500);
         lp.setMargins(0,10,0,10);
+        apiService = Client.getClient("https://fcm.googleapis.com/").create(APIService.class);
 
         tvTitle.setText(articleCard.getTitle());
         tvAuthor.setText(articleCard.getAuthor());
@@ -145,6 +157,49 @@ public class articleDetail extends AppCompatActivity {
 
         Toast.makeText(articleDetail.this, "Comment sent", Toast.LENGTH_SHORT).show();
         editText.setText("");
+        sendNotification(username);
+    }
+
+    // send notification to author of the article
+    private void sendNotification(String commenter) {
+        FirebaseDatabase.getInstance().getReference().child("Tokens").child(articleCard.getUid()).child("token").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                String usertoken = snapshot.getValue(String.class);
+                String title = "You got a new comment for your knowledge!";
+                Log.d("158", title);
+                String body = commenter + " comments on your article";
+                Log.d("160", body);
+                sendNotification(usertoken, title, body);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    private void sendNotification(String usertoken, String title, String message) {
+        Data data = new Data(title, message);
+        NotificationSender sender = new NotificationSender(data, usertoken);
+        apiService.sendNotification(sender).enqueue(new Callback<MyResponse>() {
+            @Override
+            public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {
+                if (response.code() == 200) {
+                    Log.d("190", "success");
+                    if (response.body().success != 1) {
+                        Toast.makeText(articleDetail.this, "Failed", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<MyResponse> call, Throwable t) {
+
+            }
+        });
+
     }
 
     private void loadImages() {
@@ -163,5 +218,6 @@ public class articleDetail extends AppCompatActivity {
             });
         }
     }
+
 
 }

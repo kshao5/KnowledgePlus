@@ -117,8 +117,8 @@ public class writeArticle extends AppCompatActivity {
 
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        titleET = (EditText) findViewById(R.id.title);
-        bodyET = (EditText) findViewById(R.id.body);
+        titleET = findViewById(R.id.title);
+        bodyET = findViewById(R.id.body);
         locationTV = findViewById(R.id.location);
         locationTV.setOnClickListener(new View.OnClickListener() {
             @Override

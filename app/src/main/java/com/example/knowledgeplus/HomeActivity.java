@@ -10,7 +10,15 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
 
+import com.example.knowledgeplus.SendNotificationPack.APIService;
+import com.example.knowledgeplus.SendNotificationPack.Client;
+import com.example.knowledgeplus.SendNotificationPack.Data;
+import com.example.knowledgeplus.SendNotificationPack.Token;
 import com.google.android.material.tabs.TabLayout;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 public class HomeActivity extends AppCompatActivity {
     ImageButton ib;
@@ -28,6 +36,7 @@ public class HomeActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
 
         MyViewPager viewPager = (MyViewPager) findViewById(R.id.viewPager);
         //ViewPager viewPager = (ViewPager) findViewById(R.id.viewPager);
@@ -58,5 +67,14 @@ public class HomeActivity extends AppCompatActivity {
             public void onTabReselected(TabLayout.Tab tab) {
             }
         });
+        updateToken();
     }
+
+    private void updateToken() {
+        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        String refreshToken = FirebaseInstanceId.getInstance().getToken();
+        Token token = new Token(refreshToken);
+        FirebaseDatabase.getInstance().getReference("Tokens").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(token);
+    }
+
 }
