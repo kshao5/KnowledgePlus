@@ -17,6 +17,7 @@ import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -67,6 +68,7 @@ public class writeArticle extends AppCompatActivity {
     String id;
     TextView imageIndicatorTV;
     int nImages = 0;
+    Button publishButton;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -79,7 +81,21 @@ public class writeArticle extends AppCompatActivity {
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
         imageIndicatorTV = findViewById(R.id.imageIndicatorTV);
+        titleET = (EditText) findViewById(R.id.title);
+        if (titleET == null) {
+            System.out.println("130");
+        }
+        bodyET = findViewById(R.id.body);
+        locationTV = findViewById(R.id.location);
 
+
+        publishButton = (Button)findViewById(R.id.publish);
+        publishButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addArticle();
+            }
+        });
         imageUri = new ArrayList<>();
 
         imageIndicatorTV.setVisibility(View.INVISIBLE);
@@ -117,9 +133,7 @@ public class writeArticle extends AppCompatActivity {
 
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        titleET = findViewById(R.id.title);
-        bodyET = findViewById(R.id.body);
-        locationTV = findViewById(R.id.location);
+
         locationTV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -178,7 +192,10 @@ public class writeArticle extends AppCompatActivity {
         }
     }
 
-    public void addArticle(View view) {
+    public void addArticle() {
+        if (titleET == null) {
+            Log.d("195", "titleString is null");
+        }
         String titleString = titleET.getText().toString();
         String bodyString = bodyET.getText().toString();
         String location = locationTV.getText().toString();

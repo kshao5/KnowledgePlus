@@ -3,16 +3,26 @@ package com.example.knowledgeplus.SendNotificationPack;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.media.RingtoneManager;
+import android.net.Uri;
+import android.os.Build;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
+import com.example.knowledgeplus.MainActivity;
 import com.example.knowledgeplus.R;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
+import android.app.TaskStackBuilder;
 
 // keeps the service for 10 seconds after app is closed
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
@@ -20,34 +30,49 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     private static final String CHANNEL_NAME = "Main Notifications";
     private static final String CHANNEL_DESCRIPTION = "Notification description";
     private static final String CHANNEL_ID = "MyNotificationChannel";
-    // once the message is received from another device
+
+    @Override
+    public void onNewToken(@NonNull String s) {
+        super.onNewToken(s);
+        Log.d("TAG", "the token refreshed " + s);
+    }
+
+
     @Override
     public void onMessageReceived(@NonNull RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
-        title = remoteMessage.getData().get("Title");
-        message = remoteMessage.getData().get("Message");
-        Log.d("messagingservice", title);
-        Log.d("messagingservice", message);
-        int NOTIFICATION_ID = 234;
-        NotificationManager manager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            NotificationChannel notificationChannel = new NotificationChannel(CHANNEL_ID, CHANNEL_NAME, NotificationManager.IMPORTANCE_DEFAULT);
-            notificationChannel.setDescription(CHANNEL_DESCRIPTION);
-            notificationChannel.enableVibration(true);
-            notificationChannel.enableLights(true);
-            notificationChannel.canShowBadge();
-            notificationChannel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
-            notificationChannel.setLightColor(getResources().getColor(R.color.purple_700));
-            manager.createNotificationChannel(notificationChannel);
-        }
 
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext())
-                .setSmallIcon(R.drawable.ic_android_black_24dp)
-                .setContentTitle(title)
-                .setContentText(message)
-                .setPriority(NotificationCompat.PRIORITY_HIGH)
-                .setChannelId("my_channel_01");
-        // show the notification on the screen
-        manager.notify(9001, builder.build());
+        Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+
+
+        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, "technoWeb")
+                .setSmallIcon(R.drawable.ic_launcher_background)
+                .setContentTitle(remoteMessage.getNotification().getTitle())
+                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher_background))
+                .setContentText(remoteMessage.getNotification().getBody())
+                .setAutoCancel(true)
+                .setColor(0xffff7700)
+                .setVibrate(new long[]{100, 100, 100, 100})
+                .setPriority(Notification.PRIORITY_MAX)
+                .setSound(defaultSoundUri);
+        Intent resultIntent = new Intent(this, MainActivity.class);
+
+
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+        stackBuilder.addParentStack(MainActivity.class);
+        stackBuilder.addNextIntent(resultIntent);
+        PendingIntent resultPendingIntent =
+                stackBuilder.getPendingIntent(
+                        0,
+                        PendingIntent.FLAG_UPDATE_CURRENT
+                );
+
+
+        notificationBuilder.setContentIntent(resultPendingIntent);
+        NotificationManager mNotificationManager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+
+        mNotificationManager.notify(1, notificationBuilder.build());
     }
 }

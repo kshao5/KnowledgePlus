@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
@@ -36,6 +37,14 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.ListResult;
 import com.google.firebase.storage.StorageReference;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -56,6 +65,7 @@ public class articleDetail extends AppCompatActivity {
     StorageReference imageReference;
     LinearLayout.LayoutParams lp;
 
+    String token = "ebj3TkJFQQevUL2K150Kuk:APA91bF8OLnOCgK2spFvUZtnY2PdCLfUVCodbWNRGJ0dVRX8gan_O3xRlDUrbOTAL_JhxkU_gaZ78KPf_s1DYWS_74ofO83j6Htcqp3Q7YBi27-paoMtx6GkgYH0K_Y5nupZI4BG3H27";
     private APIService apiService;
 
     @Override
@@ -114,6 +124,7 @@ public class articleDetail extends AppCompatActivity {
             }
         });
 
+
         // set imageView
         if (articleCard.nImages == 0) {
             Log.i(TAG, "Article " + articleCard.getTitle() +" has no image");
@@ -157,56 +168,100 @@ public class articleDetail extends AppCompatActivity {
 
         Toast.makeText(articleDetail.this, "Comment sent", Toast.LENGTH_SHORT).show();
         editText.setText("");
-        sendNotification(username);
+        //sendNotification(username);
+        new Notify().execute();
     }
 
+    public class Notify extends AsyncTask<Void, Void, Void>
+    {
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            try {
+                URL url = new URL("https://fcm.googleapis.com/fcm/send");
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+
+                conn.setUseCaches(false);
+                conn.setDoInput(true);
+                conn.setDoOutput(true);
+
+                conn.setRequestMethod("POST");
+                conn.setRequestProperty("Authorization", "key=AAAAVoX4LkA:APA91bH771jkVN4jojE1iy8l9uOs1Rbh2vVAD9mymJ3XpZFx8AyM-J8wr-NA8ucXS5ZMpt2Ppg-KARsf1B5YNdhkxopWXW5Mw7w56g6SBJ_heHUxworykCLwYq4638vrMMsZXMGaE-7U");
+                conn.setRequestProperty("Content-Type", "application/json");
+
+                JSONObject json = new JSONObject();
+                json.put("to", token);
+
+                JSONObject info = new JSONObject();
+                info.put("title", "TechmoWeb");
+                info.put("body", "Hello Test notification");
+
+                json.put("notification", info);
+
+                OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
+                wr.write(json.toString());
+                wr.flush();
+                conn.getInputStream();
+
+
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+    }
     // send notification to author of the article
-    private void sendNotification(String commenter) {
-        FirebaseDatabase.getInstance().getReference().child("Tokens").child(articleCard.getUid()).child("token").addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                String usertoken = snapshot.getValue(String.class);
-                String title = "You got a new comment for your knowledge!";
-                Log.d("158", title);
-                String body = commenter + " comments on your article";
-                Log.d("160", body);
-                sendNotification(usertoken, title, body);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-    }
-
-    private void sendNotification(String usertoken, String title, String message) {
-        Data data = new Data(title, message);
-        NotificationSender sender = new NotificationSender(data, usertoken);
-        apiService.sendNotification(sender).enqueue(new Callback<MyResponse>() {
-            @Override
-            public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {
-                if (response.code() == 200) {
-                    Log.d("190", "success");
-                    if (response.body().success != 1) {
-                        Toast.makeText(articleDetail.this, "Failed", Toast.LENGTH_SHORT).show();
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<MyResponse> call, Throwable t) {
-
-            }
-        });
-
-    }
+//    private void sendNotification(String commenter) {
+//        FirebaseDatabase.getInstance().getReference().child("Tokens").child(articleCard.getUid()).child("token").addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                String usertoken = snapshot.getValue(String.class);
+//                String title = "You got a new comment for your knowledge!";
+//                Log.d("158", title);
+//                String body = commenter + " comments on your article";
+//                Log.d("160", body);
+//                sendNotification(usertoken, title, body);
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError error) {
+//
+//            }
+//        });
+//    }
+//
+//    private void sendNotification(String usertoken, String title, String message) {
+//        Log.d("articleDetail", usertoken);
+//        Data data = new Data(title, message);
+//        NotificationSender sender = new NotificationSender(data, usertoken);
+//        apiService.sendNotification(sender).enqueue(new Callback<MyResponse>() {
+//            @Override
+//            public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {
+//                if (response.code() == 200) {
+//                    Log.d("190", "success");
+//                    if (response.body().success != 1) {
+//                        Toast.makeText(articleDetail.this, "Failed", Toast.LENGTH_SHORT).show();
+//                    }
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<MyResponse> call, Throwable t) {
+//
+//            }
+//        });
+//
+//    }
 
     private void loadImages() {
         imageReference = FirebaseStorage.getInstance().getReference().child("images").child(articleCard.getId());
 
         for (int i = 0; i < articleCard.getnImages(); i++) {
-            imageReference.child(""+i).getBytes(1024*1024).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+            imageReference.child(""+i).getBytes(1024*1024*5).addOnSuccessListener(new OnSuccessListener<byte[]>() {
                 @Override
                 public void onSuccess(byte[] bytes) {
                     Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);

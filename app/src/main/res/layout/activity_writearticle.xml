@@ -51,7 +51,7 @@
 
     <EditText
         android:layout_width="match_parent"
-        android:layout_height="300dp"
+        android:layout_height="200dp"
         android:layout_marginTop="5dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
@@ -77,7 +77,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text = "Add an image"
-            android:textSize="20dp"
+            android:textSize="10dp"
             android:textColor="@color/black"
             android:id = "@+id/image"
             android:onClick="addImage"
@@ -104,7 +104,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text = "Add my location"
-            android:textSize="20dp"
+            android:textSize="10dp"
             android:textColor="@color/black"
             android:id = "@+id/location"></TextView>
     </LinearLayout>
@@ -116,7 +116,7 @@
         android:layout_gravity="center"
         android:backgroundTint="@color/button"
         android:elevation="10dp"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="5dp"
         android:stateListAnimator="@anim/fragment_close_enter"
-        android:onClick="addArticle"></Button>
+        android:id = "@+id/publish"></Button>
 </LinearLayout>
