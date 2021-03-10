@@ -29,8 +29,8 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
-        MyViewPager viewPager = (MyViewPager) findViewById(R.id.viewPager);
-        //ViewPager viewPager = (ViewPager) findViewById(R.id.viewPager);
+        //MyViewPager viewPager = (MyViewPager) findViewById(R.id.viewPager);
+        ViewPager viewPager = (ViewPager) findViewById(R.id.viewPager);
         viewPager.setAdapter((new FragmentAdapter(getSupportFragmentManager(), HomeActivity.this)));
 
         TabLayout tabLayout  = (TabLayout) findViewById(R.id.tabbar);

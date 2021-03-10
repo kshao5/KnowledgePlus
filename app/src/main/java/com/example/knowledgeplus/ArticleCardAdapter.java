@@ -36,17 +36,19 @@ public class ArticleCardAdapter extends ArrayAdapter<ArticleCard> {
     Context context;
     ImageView imageView;
     TextView title, nViews_nComments, author, publishDate;
+    ArticleCard[] articleCards;
 
     public ArticleCardAdapter(Context context, ArrayList<ArticleCard> articleCards) {
         super(context, 0, articleCards);
         this.context = context;
+        this.articleCards = new ArticleCard[articleCards.size()];
     }
 
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         ArticleCard articleCard = getItem(position);
-
+        articleCards[position] = articleCard;
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.article_card, parent, false);
         }
@@ -61,7 +63,7 @@ public class ArticleCardAdapter extends ArrayAdapter<ArticleCard> {
         nViews_nComments.setText(articleCard.nViews+" views, "+articleCard.nComments+" comments");
         author.setText(articleCard.author);
         publishDate.setText(articleCard.publishDate);
-        setImage(articleCard);
+        setImage(position);
 
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -77,10 +79,12 @@ public class ArticleCardAdapter extends ArrayAdapter<ArticleCard> {
         return convertView;
     }
 
-    private void setImage(ArticleCard articleCard) {
+    private void setImage(int position) {
+        ArticleCard articleCard = articleCards[position];
         if (articleCard.nImages == 0) {
             imageView.setImageResource(R.drawable.knowledge);
         } else {
+            Log.i(TAG, "Article " + articleCard.getTitle() + " has image");
             StorageReference imageReference = FirebaseStorage.getInstance().getReference().child("images").child(articleCard.getId()).child("0");
             imageReference.getBytes(MAX_DOWNLOAD_BUFFER_SIZE)
                     .addOnSuccessListener(new OnSuccessListener<byte[]>() {
