@@ -29,8 +29,8 @@ public class MyArticlesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_articles);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        listView = findViewById(R.id.listView);
 
+        listView = findViewById(R.id.listView);
         ArrayList<ArticleCard> myArticleCards = new ArrayList<ArticleCard>();
         db = FirebaseDatabase.getInstance();
         article_table = db.getReference("article");

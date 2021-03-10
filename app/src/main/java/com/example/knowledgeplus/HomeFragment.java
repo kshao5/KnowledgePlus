@@ -50,39 +50,30 @@ public class HomeFragment extends Fragment {
 
         listView = (ListView) view.findViewById(R.id.listView);
 
-        article_table.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                articleCards.clear();
-                for (DataSnapshot articleSnapshot : snapshot.getChildren()) {
-                    ArticleCard articleCard = articleSnapshot.getValue(ArticleCard.class);
-
-                    articleCards.add(0, ArticleCard.newInstance(articleCard.getId(),
-                                                             articleCard.getTitle(),
-                                                             articleCard.getnViews(),
-                                                             articleCard.getnComments(),
-                                                             articleCard.getAuthor(),
-                                                             articleCard.getUid(),
-                                                             articleCard.getLocation(),
-                                                             articleCard.getPublishDate(),
-                                                             articleCard.getBody(),
-                                                             articleCard.getnImages()));
-
-                }
-                ArticleCardAdapter articleCardAdapter = new ArticleCardAdapter(getContext(), articleCards);
-                listView.setAdapter(articleCardAdapter);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                // Nothing
-            }
-        });
-
+        article_table.addValueEventListener(listAllArticlesListener);
 
         return view;
     }
 
+    ValueEventListener listAllArticlesListener = new ValueEventListener() {
+        @Override
+        public void onDataChange(@NonNull DataSnapshot snapshot) {
+            articleCards.clear();
+            for (DataSnapshot articleSnapshot : snapshot.getChildren()) {
+                ArticleCard articleCard = articleSnapshot.getValue(ArticleCard.class);
+
+                articleCards.add(0, articleCard);
+            }
+
+            ArticleCardAdapter articleCardAdapter = new ArticleCardAdapter(getContext(), articleCards);
+            listView.setAdapter(articleCardAdapter);
+        }
+
+        @Override
+        public void onCancelled(@NonNull DatabaseError error) {
+
+        }
+    };
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {

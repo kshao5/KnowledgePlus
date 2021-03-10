@@ -31,17 +31,19 @@ public class MyArticleCardAdapter extends ArrayAdapter<ArticleCard> {
     ImageView imageView;
     TextView title, nViews_nComments, publishDate;
     ImageButton edit, delete;
-    ArticleCard articleCard;
+    ArticleCard[] articleCards;
 
     public MyArticleCardAdapter(Context context, ArrayList<ArticleCard> articleCards) {
         super(context, 0, articleCards);
         this.context = context;
+        this.articleCards = new ArticleCard[articleCards.size()];
     }
 
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-        articleCard = getItem(position);
+        ArticleCard articleCard = getItem(position);
+        articleCards[position] = articleCard;
 
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.my_article_card, parent, false);
@@ -81,7 +83,7 @@ public class MyArticleCardAdapter extends ArrayAdapter<ArticleCard> {
                         .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                editArticle();
+                                editArticle(position);
                             }
                         });
                 AlertDialog dialog = builder.create();
@@ -93,12 +95,12 @@ public class MyArticleCardAdapter extends ArrayAdapter<ArticleCard> {
             @Override
             public void onClick(View v) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                builder.setMessage("Edit this article?")
+                builder.setMessage("Delete this article?")
                         .setNegativeButton("CANCEL", null)
                         .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                deleteArticle();
+                                deleteArticle(position);
                             }
                         });
                 AlertDialog dialog = builder.create();
@@ -111,7 +113,7 @@ public class MyArticleCardAdapter extends ArrayAdapter<ArticleCard> {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, articleDetail.class);
-                intent.putExtra("My Class", articleCard);
+                intent.putExtra(articleDetail.ARTICLE_CARD, articleCard);
                 Log.i(TAG, "Start Article Details");
                 context.startActivity(intent);
             }
@@ -121,11 +123,16 @@ public class MyArticleCardAdapter extends ArrayAdapter<ArticleCard> {
         return convertView;
     }
 
-    private void editArticle() {
-        //TODO
+    private void editArticle(int position) {
+        ArticleCard articleCard = articleCards[position];
+        Intent intent = new Intent(context, writeArticle.class);
+        intent.putExtra(writeArticle.EDIT_MODE, true);
+        intent.putExtra(writeArticle.ARTICLE_CARD, articleCard);
+        context.startActivity(intent);
     }
 
-    private void deleteArticle() {
+    private void deleteArticle(int position) {
+        ArticleCard articleCard = articleCards[position];
         FirebaseDatabase.getInstance().getReference("comment").child(articleCard.getId()).removeValue();
         FirebaseDatabase.getInstance().getReference("article").child(articleCard.getId()).removeValue();
         for (int i = 0; i < articleCard.getnImages(); i++) {
