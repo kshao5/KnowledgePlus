@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -14,6 +15,7 @@ import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -53,10 +55,11 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-//TODO
-// for displaying detail of article
+
 public class articleDetail extends AppCompatActivity {
     private final String TAG = "ArticleDetail";
+    private final int MAX_DOWNLOAD_BUFFER_SIZE = 1024*1024*100; //100MB
+    public static final String ARTICLE_CARD = "article_card";
     ArticleCard articleCard;
     TextView tvTitle, tvAuthor, tvLocation, tvPublishDate, tvNViews, tvNComments, tvBody, tvComment;
     EditText editText;
@@ -78,7 +81,7 @@ public class articleDetail extends AppCompatActivity {
         setContentView(R.layout.activity_article_detail);
 
         Intent intent = getIntent();
-        articleCard = (ArticleCard) intent.getSerializableExtra("My Class");
+        articleCard = (ArticleCard) intent.getSerializableExtra(ARTICLE_CARD);
 
         tvTitle = (TextView) findViewById(R.id.textViewTitle);
         tvAuthor = (TextView) findViewById(R.id.textViewAuthor);
@@ -97,37 +100,20 @@ public class articleDetail extends AppCompatActivity {
 
         tvTitle.setText(articleCard.getTitle());
         tvAuthor.setText(articleCard.getAuthor());
-        if (articleCard.getLocation() == null || articleCard.getLocation().isEmpty()) {
-            tvLocation.setText("Unknown");
-        } else {
-            tvLocation.setText(articleCard.getLocation());
-        }
         tvPublishDate.setText(articleCard.getPublishDate());
         tvNViews.setText(""+articleCard.getnViews());
         tvNComments.setText(""+articleCard.getnComments());
         tvBody.setText(articleCard.getBody());
 
+        // set location
+        if (articleCard.getLocation() == null || articleCard.getLocation().isEmpty()) {
+            tvLocation.setText("Unknown");
+        } else {
+            tvLocation.setText(articleCard.getLocation());
+        }
 
         db = FirebaseDatabase.getInstance().getReference("comment").child(articleCard.getId());
-        db.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                String commentString = "";
-                for (DataSnapshot commentSnapshot : snapshot.getChildren()) {
-                    Comment comment = commentSnapshot.getValue(Comment.class);
-                    commentString += "\n" + comment.getUsername() +  ", " + comment.getDate() + ":\n" + comment.getText() + "\n";
-                }
-                tvComment.setText(commentString);
-                int nComments = (int)snapshot.getChildrenCount();
-                tvNComments.setText(""+nComments);
-                FirebaseDatabase.getInstance().getReference("article").child(articleCard.getId()).child("nComments").setValue(nComments);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                //Nothing
-            }
-        });
+        db.addValueEventListener(listAllCommentsListener);
 
 
         // set imageView
@@ -137,7 +123,7 @@ public class articleDetail extends AppCompatActivity {
             loadImages();
         }
 
-        // set send button
+        // set send-comment button
         send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -182,12 +168,21 @@ public class articleDetail extends AppCompatActivity {
         String comment_id = db.push().getKey();
         android.text.format.DateFormat df = new android.text.format.DateFormat();
         String date = df.format("yyyy/MM/dd", Calendar.getInstance().getTime()).toString();
-        db.child(comment_id).setValue(Comment.newInstance(comment_id, uid, username, text, date));
+        db.child(comment_id).setValue(CommentCard.newInstance(comment_id, uid, username, articleCard.getId(), text, date));
 
         Toast.makeText(articleDetail.this, "Comment sent", Toast.LENGTH_SHORT).show();
         editText.setText("");
         //sendNotification(username);
         new Notify().execute();
+        closeKeyBoard();
+    }
+
+    private void closeKeyBoard() {
+        View view = this.getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
     }
 
     public class Notify extends AsyncTask<Void, Void, Void>
@@ -279,7 +274,8 @@ public class articleDetail extends AppCompatActivity {
         imageReference = FirebaseStorage.getInstance().getReference().child("images").child(articleCard.getId());
 
         for (int i = 0; i < articleCard.getnImages(); i++) {
-            imageReference.child(""+i).getBytes(1024*1024*5).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+
+            imageReference.child(""+i).getBytes(MAX_DOWNLOAD_BUFFER_SIZE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
                 @Override
                 public void onSuccess(byte[] bytes) {
                     Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
@@ -292,5 +288,24 @@ public class articleDetail extends AppCompatActivity {
         }
     }
 
+    ValueEventListener listAllCommentsListener = new ValueEventListener() {
+        @Override
+        public void onDataChange(@NonNull DataSnapshot snapshot) {
+            String commentString = "";
+            for (DataSnapshot commentSnapshot : snapshot.getChildren()) {
+                CommentCard comment = commentSnapshot.getValue(CommentCard.class);
+                commentString += "\n" + comment.getUsername() +  ", " + comment.getDate() + ":\n" + comment.getText() + "\n";
+            }
+            tvComment.setText(commentString);
+            int nComments = (int)snapshot.getChildrenCount();
+            tvNComments.setText(""+nComments);
+            FirebaseDatabase.getInstance().getReference("article").child(articleCard.getId()).child("nComments").setValue(nComments);
+        }
+
+        @Override
+        public void onCancelled(@NonNull DatabaseError error) {
+            //Nothing
+        }
+    };
 
 }

@@ -98,6 +98,20 @@ public class ArticleCard implements Serializable {
         this.nImages = nImages;
     }
 
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
+    }
+
+
     public static ArticleCard newInstance(String id, String title, int nViews, int nComments, String author, String uid, String location, String publishDate, String body, int nImages) {
         return new ArticleCard(id, title, nViews, nComments, author, uid, location, publishDate, body, nImages);
     }
