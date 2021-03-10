@@ -1,6 +1,7 @@
 package com.example.knowledgeplus;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -9,9 +10,11 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -61,11 +64,23 @@ public class CommentCardAdapter extends ArrayAdapter<CommentCard> {
         delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.i(TAG, "Remove comment: " + commentCard.getText());
-                FirebaseDatabase.getInstance().getReference("comment")
-                        .child(commentCard.getAid())
-                        .child(commentCard.getId())
-                        .removeValue();
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                builder.setMessage("Delete the comment?")
+                        .setNegativeButton("CANCEL", null)
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Log.i(TAG, "Remove comment: " + commentCard.getText());
+                                FirebaseDatabase.getInstance().getReference("comment")
+                                        .child(commentCard.getAid())
+                                        .child(commentCard.getId())
+                                        .removeValue();
+                                Toast.makeText(context, "Comment removed", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                AlertDialog dialog = builder.create();
+                dialog.show();
+
             }
         });
 

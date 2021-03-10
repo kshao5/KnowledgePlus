@@ -20,6 +20,7 @@ public class MyCommentsActivity extends AppCompatActivity {
     ListView listView;
     DatabaseReference commentReference = FirebaseDatabase.getInstance().getReference("comment");
     String uid;
+    ArrayList<CommentCard> commentCards;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,8 +29,7 @@ public class MyCommentsActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         listView = findViewById(R.id.listView);
-
-        ArrayList<CommentCard> commentCards = new ArrayList<CommentCard>();
+        commentCards = new ArrayList<CommentCard>();
         uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
         commentReference.addValueEventListener(new ValueEventListener() {
@@ -54,8 +54,6 @@ public class MyCommentsActivity extends AppCompatActivity {
                 //Nothing
             }
         });
-
-
     }
 
     @Override
