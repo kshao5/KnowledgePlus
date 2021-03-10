@@ -27,6 +27,7 @@ import com.example.knowledgeplus.SendNotificationPack.Data;
 import com.example.knowledgeplus.SendNotificationPack.MyResponse;
 import com.example.knowledgeplus.SendNotificationPack.NotificationSender;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -65,8 +66,11 @@ public class articleDetail extends AppCompatActivity {
     StorageReference imageReference;
     LinearLayout.LayoutParams lp;
 
-    String token = "ebj3TkJFQQevUL2K150Kuk:APA91bF8OLnOCgK2spFvUZtnY2PdCLfUVCodbWNRGJ0dVRX8gan_O3xRlDUrbOTAL_JhxkU_gaZ78KPf_s1DYWS_74ofO83j6Htcqp3Q7YBi27-paoMtx6GkgYH0K_Y5nupZI4BG3H27";
+    //String token = "ebj3TkJFQQevUL2K150Kuk:APA91bF8OLnOCgK2spFvUZtnY2PdCLfUVCodbWNRGJ0dVRX8gan_O3xRlDUrbOTAL_JhxkU_gaZ78KPf_s1DYWS_74ofO83j6Htcqp3Q7YBi27-paoMtx6GkgYH0K_Y5nupZI4BG3H27";
+    DatabaseReference task;
+    String token;
     private APIService apiService;
+    String username;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,6 +106,7 @@ public class articleDetail extends AppCompatActivity {
         tvNViews.setText(""+articleCard.getnViews());
         tvNComments.setText(""+articleCard.getnComments());
         tvBody.setText(articleCard.getBody());
+
 
         db = FirebaseDatabase.getInstance().getReference("comment").child(articleCard.getId());
         db.addValueEventListener(new ValueEventListener() {
@@ -147,13 +152,26 @@ public class articleDetail extends AppCompatActivity {
                         });
                 AlertDialog dialog = builder.create();
                 dialog.show();
+                task = FirebaseDatabase.getInstance().getReference().child("Tokens").child(articleCard.getUid());
+                task.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        token = snapshot.child("token").getValue().toString();
+                        Log.d("159", token);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
             }
         });
     }
 
     private void sendComment() {
         String text = editText.getText().toString().trim();
-        String username = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
+        username = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
         String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
         if (text.isEmpty()) {
@@ -193,8 +211,8 @@ public class articleDetail extends AppCompatActivity {
                 json.put("to", token);
 
                 JSONObject info = new JSONObject();
-                info.put("title", "TechmoWeb");
-                info.put("body", "Hello Test notification");
+                info.put("title", username + " gave you a comment");
+                info.put("body", "Open the app to view");
 
                 json.put("notification", info);
 

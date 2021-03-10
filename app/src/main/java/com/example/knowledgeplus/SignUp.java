@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -38,6 +39,7 @@ public class SignUp extends AppCompatActivity {
         fullName = findViewById(R.id.fullName);
         email = findViewById(R.id.email);
         password = findViewById(R.id.password);
+        password.setTransformationMethod(PasswordTransformationMethod.getInstance());
         registerButton = findViewById(R.id.registerButton);
         loginText = findViewById(R.id.loginText);
 
