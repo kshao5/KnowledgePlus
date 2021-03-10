@@ -80,6 +80,7 @@ public class writeArticle extends AppCompatActivity {
 
     List<Uri> imageUri;
 
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -177,9 +178,11 @@ public class writeArticle extends AppCompatActivity {
         }
     }
 
+
     public void addArticle(View view) {
         String titleString = titleET.getText().toString().trim();
         String bodyString = bodyET.getText().toString().trim();
+
         String location = locationTV.getText().toString();
         if (location.equals("Add my location")) {
             location = null;

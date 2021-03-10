@@ -9,6 +9,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
@@ -22,6 +23,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.knowledgeplus.SendNotificationPack.APIService;
+import com.example.knowledgeplus.SendNotificationPack.Client;
+import com.example.knowledgeplus.SendNotificationPack.Data;
+import com.example.knowledgeplus.SendNotificationPack.MyResponse;
+import com.example.knowledgeplus.SendNotificationPack.NotificationSender;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -33,8 +39,21 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.ListResult;
 import com.google.firebase.storage.StorageReference;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 
 public class articleDetail extends AppCompatActivity {
     private final String TAG = "ArticleDetail";
@@ -48,6 +67,9 @@ public class articleDetail extends AppCompatActivity {
     DatabaseReference db;
     StorageReference imageReference;
     LinearLayout.LayoutParams lp;
+
+    String token = "ebj3TkJFQQevUL2K150Kuk:APA91bF8OLnOCgK2spFvUZtnY2PdCLfUVCodbWNRGJ0dVRX8gan_O3xRlDUrbOTAL_JhxkU_gaZ78KPf_s1DYWS_74ofO83j6Htcqp3Q7YBi27-paoMtx6GkgYH0K_Y5nupZI4BG3H27";
+    private APIService apiService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +92,7 @@ public class articleDetail extends AppCompatActivity {
         images = (LinearLayout) findViewById(R.id.images);
         lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,500);
         lp.setMargins(0,10,0,10);
+        apiService = Client.getClient("https://fcm.googleapis.com/").create(APIService.class);
 
         tvTitle.setText(articleCard.getTitle());
         tvAuthor.setText(articleCard.getAuthor());
@@ -88,6 +111,7 @@ public class articleDetail extends AppCompatActivity {
         // set all comments
         db = FirebaseDatabase.getInstance().getReference("comment").child(articleCard.getId());
         db.addValueEventListener(listAllCommentsListener);
+
 
         // set imageView
         if (articleCard.nImages == 0) {
@@ -132,21 +156,109 @@ public class articleDetail extends AppCompatActivity {
 
         Toast.makeText(articleDetail.this, "Comment sent", Toast.LENGTH_SHORT).show();
         editText.setText("");
+        //sendNotification(username);
+        new Notify().execute();
         closeKeyBoard();
     }
 
     private void closeKeyBoard() {
         View view = this.getCurrentFocus();
         if (view != null) {
-            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
     }
+
+    public class Notify extends AsyncTask<Void, Void, Void>
+    {
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            try {
+                URL url = new URL("https://fcm.googleapis.com/fcm/send");
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+
+                conn.setUseCaches(false);
+                conn.setDoInput(true);
+                conn.setDoOutput(true);
+
+                conn.setRequestMethod("POST");
+                conn.setRequestProperty("Authorization", "key=AAAAVoX4LkA:APA91bH771jkVN4jojE1iy8l9uOs1Rbh2vVAD9mymJ3XpZFx8AyM-J8wr-NA8ucXS5ZMpt2Ppg-KARsf1B5YNdhkxopWXW5Mw7w56g6SBJ_heHUxworykCLwYq4638vrMMsZXMGaE-7U");
+                conn.setRequestProperty("Content-Type", "application/json");
+
+                JSONObject json = new JSONObject();
+                json.put("to", token);
+
+                JSONObject info = new JSONObject();
+                info.put("title", "TechmoWeb");
+                info.put("body", "Hello Test notification");
+
+                json.put("notification", info);
+
+                OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
+                wr.write(json.toString());
+                wr.flush();
+                conn.getInputStream();
+
+
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+    }
+    // send notification to author of the article
+//    private void sendNotification(String commenter) {
+//        FirebaseDatabase.getInstance().getReference().child("Tokens").child(articleCard.getUid()).child("token").addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                String usertoken = snapshot.getValue(String.class);
+//                String title = "You got a new comment for your knowledge!";
+//                Log.d("158", title);
+//                String body = commenter + " comments on your article";
+//                Log.d("160", body);
+//                sendNotification(usertoken, title, body);
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError error) {
+//
+//            }
+//        });
+//    }
+//
+//    private void sendNotification(String usertoken, String title, String message) {
+//        Log.d("articleDetail", usertoken);
+//        Data data = new Data(title, message);
+//        NotificationSender sender = new NotificationSender(data, usertoken);
+//        apiService.sendNotification(sender).enqueue(new Callback<MyResponse>() {
+//            @Override
+//            public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {
+//                if (response.code() == 200) {
+//                    Log.d("190", "success");
+//                    if (response.body().success != 1) {
+//                        Toast.makeText(articleDetail.this, "Failed", Toast.LENGTH_SHORT).show();
+//                    }
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<MyResponse> call, Throwable t) {
+//
+//            }
+//        });
+//
+//    }
 
     private void loadImages() {
         imageReference = FirebaseStorage.getInstance().getReference().child("images").child(articleCard.getId());
 
         for (int i = 0; i < articleCard.getnImages(); i++) {
+
             imageReference.child(""+i).getBytes(MAX_DOWNLOAD_BUFFER_SIZE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
                 @Override
                 public void onSuccess(byte[] bytes) {
@@ -179,4 +291,5 @@ public class articleDetail extends AppCompatActivity {
             //Nothing
         }
     };
+
 }
