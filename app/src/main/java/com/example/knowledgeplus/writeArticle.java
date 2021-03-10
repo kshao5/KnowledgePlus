@@ -12,6 +12,7 @@ import android.location.Location;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 import android.view.Gravity;
@@ -152,7 +153,17 @@ public class writeArticle extends AppCompatActivity {
         publishButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addArticle(v);
+                AlertDialog.Builder builder = new AlertDialog.Builder(writeArticle.this);
+                builder.setMessage("Publish the article?")
+                        .setNegativeButton("CANCEL", null)
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                addArticle(v);
+                            }
+                        });
+                AlertDialog dialog = builder.create();
+                dialog.show();
             }
         });
     }
@@ -165,7 +176,6 @@ public class writeArticle extends AppCompatActivity {
             imageIndicatorTV.setText("Added " + imageUri.size() + " images");
         }
     }
-
 
     public void addArticle(View view) {
         String titleString = titleET.getText().toString().trim();
@@ -192,25 +202,33 @@ public class writeArticle extends AppCompatActivity {
         if (isEditMode) {
             id = articleCard.getId();
             articleCard.setTitle(titleString);
-            articleCard.setBody(bodyString + "\n(Edit on " + date +")");
+            articleCard.setBody(bodyString + "\n(Edited on " + date +")");
             articleCard.setLocation(location);
             uploadImage();
             if (nImages > 0) {
                 articleCard.setnImages(nImages);
             }
-            databaseReference.child(articleCard.getId()).setValue(articleCard);
-            Toast.makeText(this, "Article updated", Toast.LENGTH_SHORT).show();
+            //databaseReference.child(id).setValue(articleCard);
+            //Toast.makeText(this, "Article updated", Toast.LENGTH_LONG).show();
         } else {
             // creating unique id for article
             id = databaseReference.push().getKey();
             uploadImage();
-            ArticleCard newArticleCard = ArticleCard.newInstance(id, titleString, 0, 0, username, uid, location, date, bodyString, nImages);
+            articleCard = ArticleCard.newInstance(id, titleString, 0, 0, username, uid, location, date, bodyString, nImages);
             // inside the id node, the new article will be stored
-            databaseReference.child(id).setValue(newArticleCard);
-            Toast.makeText(this, "Article added", Toast.LENGTH_SHORT).show();
+            //databaseReference.child(id).setValue(articleCard);
+            //Toast.makeText(this, "Article added", Toast.LENGTH_LONG).show();
             //startActivity(new Intent(this, HomeActivity.class));
         }
-        finish();
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                databaseReference.child(id).setValue(articleCard);
+                Toast.makeText(writeArticle.this, "Article published", Toast.LENGTH_LONG).show();
+                finish();
+            }
+        }, 1000);
     }
 
     private Task<Location> getLastLocation() {

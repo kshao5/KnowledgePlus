@@ -84,13 +84,13 @@ public class ArticleCardAdapter extends ArrayAdapter<ArticleCard> {
         if (articleCard.nImages == 0) {
             imageView.setImageResource(R.drawable.knowledge);
         } else {
-            Log.i(TAG, "Article " + articleCard.getTitle() + " has image");
             StorageReference imageReference = FirebaseStorage.getInstance().getReference().child("images").child(articleCard.getId()).child("0");
             imageReference.getBytes(MAX_DOWNLOAD_BUFFER_SIZE)
                     .addOnSuccessListener(new OnSuccessListener<byte[]>() {
                         @Override
                         public void onSuccess(byte[] bytes) {
                             Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                            Log.i(TAG, "Set image for article " + articleCard.getTitle());
                             imageView.setImageBitmap(bitmap);
                         }
                     });
